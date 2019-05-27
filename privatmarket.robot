@@ -1859,6 +1859,7 @@ ${tender_data_milestones[2].duration.type}  xpath=//milestone[3]//div[contains(t
     Run Keyword And Return If  'percentage' in '${field_name}'  Отримати інформацію з milestones.percentage  ${field_value}
     Run Keyword And Return If  'duration.days' in '${field_name}'  Отримати інформацію з milestones.duration.days  ${field_value}
     Run Keyword And Return If  'duration.type' in '${field_name}'  privatmarket_service.get_milestones_duration_type  ${field_value}
+    debug
 
 
 Отримати інформацію з milestones.duration.days
