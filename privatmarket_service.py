@@ -2,26 +2,39 @@
 
 import os
 import sys
+from dateutil import parser
 from datetime import datetime
 from pytz import timezone
 import re
 import datetime
 import dateutil.parser
+from datetime import timedelta
 
 
 def modify_test_data(initial_data):
     # set user name
     # initial_data['procuringEntity']['name'] = u'Товариство З Обмеженою Відповідальністю \'Мак Медіа Прінт\''
-    initial_data['procuringEntity']['name'] = u'ТОВ \'СФ \'РУБІЖНЕ\''
+    initial_data['procuringEntity']['name'] = u'ТОВ \"СФ \"РУБІЖНЕ\"'
     if 'contactPoint' in initial_data['procuringEntity']:
         initial_data['procuringEntity']['contactPoint']['telephone'] = u'+380670444580'
         initial_data['procuringEntity']['contactPoint']['url'] = u'https://dadadad.com'
-    initial_data['procuringEntity']['identifier']['legalName'] = u'ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \'СІЛЬСЬКОГОСПОДАРСЬКА ФІРМА \'РУБІЖНЕ\''
+    initial_data['procuringEntity']['identifier']['legalName'] = u'ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СІЛЬСЬКОГОСПОДАРСЬКА ФІРМА \"РУБІЖНЕ\"'
     initial_data['procuringEntity']['identifier']['id'] = u'38580144'
+    # #
+    initial_data['buyers'][0]['identifier']['id'] = u'38580144'
+    initial_data['buyers'][0]['identifier']['legalName'] = u'ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СІЛЬСЬКОГОСПОДАРСЬКА ФІРМА \"РУБІЖНЕ\"'
+    initial_data['buyers'][0]['name'] = u'ТОВ \"СФ \"РУБІЖНЕ\"'
+    initial_data['tender']['tenderPeriod']['startDate'] = add_day_to_date(initial_data['tender']['tenderPeriod']['startDate'])
+
     # initial_data['procuringEntity']['name'] = u'Макстрой Діск, Товариство З Обмеженою Відповідальністю'
     # initial_data['procuringEntity']['name'] = u'ФОП ОГАНІН ОЛЕКСАНДР ПЕТРОВИЧ'
     return initial_data
 
+def add_day_to_date(date):
+    dat = parser.parse(date)
+    new_date = (dat + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S%z')
+    new = parser.parse(new_date).isoformat()
+    return new
 
 def get_currency_type(currency):
     if isinstance(currency, str):
@@ -55,11 +68,18 @@ def get_time_with_offset(date):
     return localized_date.strftime('%Y-%m-%d %H:%M:%S.%f%z')
 
 
-def get_time_with_offset_formatted(date, input_format_date, output_format):
+# def get_time_with_offset_formatted(date, input_format_date, output_format):
+#     date_obj = datetime.datetime.strptime(date, input_format_date)
+#     time_zone = timezone('Europe/Kiev')
+#     localized_date = time_zone.localize(date_obj)
+#     return localized_date.strftime(output_format)
+
+def get_time_with_offset_formatted(date, input_format_date):
+    tz = timezone('Europe/Kiev')
     date_obj = datetime.datetime.strptime(date, input_format_date)
-    time_zone = timezone('Europe/Kiev')
-    localized_date = time_zone.localize(date_obj)
-    return localized_date.strftime(output_format)
+    res = tz.localize(date_obj)
+    result = res.isoformat()
+    return result
 
 
 def get_current_date():
@@ -116,7 +136,7 @@ def get_unit_name(current_name):
         u'тони': {u'тонна', u'тонны', u'тонн'},
         u'метри квадратні': {u'метр квадратный', u'метра квадратного', u'метров квадратных'},
         u'кілометри': {u'километр', u'километров', u'километра'},
-        u'штуки': {u'штука', u'штуки', u'штук'},
+        u'штуки': {u'штука', u'штуки', u'штук', u'Штуки'},
         u'місяць': {u'месяц', u'месяца', u'месяцев'},
         u'пачка': {u'пачка', u'пачек', u'пачкики'},
         u'упаковка': {u'упаковка', u'упаковок', u'упаковки'},
@@ -233,12 +253,13 @@ def get_claim_status (status):
     type_dictionary = {
         u'Вiдправлено': 'claim',
         u'Отримано вiдповiдь': 'answered',
-        u'Вирiшена': 'resolved',
+        u'Задоволено': 'resolved',
         u'Скасована': 'cancelled',
         u'Не вирiшена, обробляється': 'pending',
         u'Залишена без відповіді': 'ignored',
-        u'Вiдхилена': 'declined',
-        u'Недiйсна': 'invalid'
+        u'Не задоволено': 'declined',
+        u'Вимога відхилена': 'invalid',
+        u'Запит для пiдтверждения скасування': 'stopping'
     }
     type_name = type_dictionary.get(status)
     return type_name
@@ -246,9 +267,16 @@ def get_claim_status (status):
 
 def get_procurementMethod_Type (type):
     type_dictionary = {
-        u'Конкурентний діалог з публікацією англ. мовою': 'competitiveDialogueEU',
-        u'Конкурентний діалог': 'competitiveDialogueUA',
-        u'Переговорна процедура для потреб оборони': 'aboveThresholdUA.defense'
+        u'Конкурентний діалог з публікацією англійською мовою 1-ий етап': 'competitiveDialogueEU',
+        u'Конкурентний діалог 1-ий етап': 'competitiveDialogueUA',
+        u'Переговорна процедура для потреб оборони': 'aboveThresholdUA.defense',
+        u'Укладання рамкової угоди': 'closeFrameworkAgreementUA',
+        u'Допорогові закупівлі': 'belowThreshold',
+        u'Переговорна процедура': 'negotiation',
+        u'Звіт про укладений договір': 'reporting',
+        u'Відкриті торги': 'aboveThresholdUA',
+        u'Відкриті торги з публікацією англійською мовою': 'aboveThresholdEU',
+        u'Відкриті торги для закупівлі енергосервісу': 'esco'
     }
     type_name = type_dictionary.get(type)
     return type_name
@@ -264,7 +292,7 @@ def abs_number(number):
 
 
 def get_abs_item_index(lot_index, item_index, items_count):
-    abs_index = ((int(lot_index)-1) * int(items_count)) + item_index
+    abs_index = ((int(lot_index)-1) * int(items_count)) + int(item_index)
     return abs_index
 
 
@@ -316,7 +344,7 @@ def get_ECP_key(path):
     return os.path.join(os.getcwd(), path)
 
 
-def get_date_formatting(date,format_day):
+def get_date_formatting(date, format_day):
     return dateutil.parser.parse(date).date().strftime(format_day)
 
 
@@ -328,8 +356,62 @@ def get_scenarios_name():
     return name
 
 
-def is_click_button(lot_index, item_index):
-    status = 'true'
-    if int(item_index) == 1 and int(lot_index) == 1:
-        return 'false'
+def is_click_button(item_index, items_count, lot_index):
+    status = 'false'
+    if int(item_index) < int(items_count) and lot_index > 1:
+        return 'true'
     return status
+
+
+def get_milestones_title(title):
+    titles = {
+        u'підписання договору': 'signingTheContract',
+        u'поставка товару': 'deliveryOfGoods',
+        u'дата подання заявки': 'submissionDateOfApplications',
+        u'дата закінчення звітного періоду': 'endDateOfTheReportingPeriod',
+        u'дата виставлення рахунку': 'dateOfInvoicing',
+        u'виконання робіт': 'executionOfWorks',
+        u'надання послуг': 'submittingServices',
+        u'інша подія': 'anotherEvent'
+    }
+    title_name = titles.get(title)
+    return title_name
+
+
+def get_milestones_code(code):
+    codes = {
+        u'Аванс': 'prepayment',
+        u'Пiсляоплата': 'postpayment'
+    }
+    code_name = codes.get(code)
+    return code_name
+
+
+def get_milestones_duration_type(type):
+    types = {
+        u'робочих': 'working',
+        u'банківськіх': 'banking',
+        u'календарних': 'calendar'
+    }
+    type_name = types.get(type)
+    return type_name
+
+
+def get_rationaleType (type):
+    type_dictionary = {
+        u'Зменшення обсягів закупівлі': 'volumeCuts',
+        u'Зміна сторонніх показників (курсу, тарифів...)': 'thirdParty',
+        u'Зміна ціни у зв’язку із зміною ставок податків і зборів': 'taxRate',
+        u'Покращення якості предмета закупівлі': 'qualityImprovement',
+        u'Узгоджене зменшення ціни': 'priceReduction',
+        u'Зміна ціни за одиницю товару': 'itemPriceVariation',
+        u'Продовження строку дії договору на наступний рік': 'fiscalYearExtension',
+        u'Продовження строку дії договору (черездокументально підтверджені об’єктивні обставини)': 'durationExtension',
+
+    }
+    type_name = type_dictionary.get(type)
+    return type_name
+
+
+def change_fake_date():
+    return (datetime.datetime.now(timezone('Europe/Kiev')) + timedelta(days=3)).strftime('%Y-%m-%dT%H:%M:%S.%f%z')
