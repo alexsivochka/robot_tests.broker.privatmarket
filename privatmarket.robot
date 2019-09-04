@@ -1848,6 +1848,41 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
 Підтвердити підписання контракту
     [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
     Wait For Element With Reload  css=input[data-id='contract.title']  1
+    Run Keyword If  '${MODE}' == 'reporting'
+    ...  Run Keywords
+    ...  Заповнити поля договору  ${tender_uaid}
+    ...  AND  Опублікувати договір  ${tender_uaid}
+#    Wait Element Visibility And Input Text  css=input[data-id='contract.title']  ${tender_uaid}
+#    Wait Element Visibility And Input Text  css=#contractNumber  ${tender_uaid}
+#
+#    Click Element  xpath=//input[@name='dateSigned']
+#    Wait Visibility And Click Element  css=div.datepicker-days td.today
+#    Wait Visibility And Click Element  xpath=//input[@name='endDate']
+#    Wait Visibility And Click Element  xpath=//div[@class="datepicker-days"]//tbody//tr[6]//td[4]
+#
+#    Wait For Ajax
+#    ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
+#    Wait Visibility And Click Element  xpath=//div[@class='form-block__item']/form/select[1]/option[2]
+#    Sleep  1s
+#    Wait Visibility And Click Element  xpath=//div[@class='form-block__item']/form/select[2]/option[2]
+#    Sleep  1s
+#    Choose File  xpath=//div[@class='form-block__item']/form/div/input  ${file_path}
+#
+#    Wait Until Element Is Enabled  css=button[ng-click="act.saveContract('active')"]  ${COMMONWAIT}
+#    Click Button  css=button[ng-click="act.saveContract('active')"]
+#    Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
+#    Wait Until Element Is Visible  css=.notify  ${COMMONWAIT}
+#    Sleep  30s
+#    Reload Page
+    Wait For Element With Reload  xpath=//span[@id='contractStatus']  1
+    Wait Visibility And Click Element  xpath=//div[contains(@class,'contracts info')]//div[@id='noEcp']
+    Sleep  1s
+    Run Keyword  Завантажити ЕЦП
+    Sleep  3min
+
+
+Заповнити поля договору
+    [Arguments]  ${tender_uaid}
     Wait Element Visibility And Input Text  css=input[data-id='contract.title']  ${tender_uaid}
     Wait Element Visibility And Input Text  css=#contractNumber  ${tender_uaid}
 
@@ -1863,18 +1898,17 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     Wait Visibility And Click Element  xpath=//div[@class='form-block__item']/form/select[2]/option[2]
     Sleep  1s
     Choose File  xpath=//div[@class='form-block__item']/form/div/input  ${file_path}
+    Sleep  20s
 
+
+Опублікувати договір
+    [Arguments]  ${tender_uaid}
     Wait Until Element Is Enabled  css=button[ng-click="act.saveContract('active')"]  ${COMMONWAIT}
     Click Button  css=button[ng-click="act.saveContract('active')"]
     Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
     Wait Until Element Is Visible  css=.notify  ${COMMONWAIT}
-    Sleep  30s
+    Sleep  20s
     Reload Page
-    Wait For Element With Reload  xpath=//span[@id='contractStatus']  1
-    Wait Visibility And Click Element  xpath=//div[contains(@class,'contracts info')]//div[@id='noEcp']
-    Sleep  1s
-    Run Keyword  Завантажити ЕЦП
-    Sleep  3min
 
 
 Редагувати угоду
