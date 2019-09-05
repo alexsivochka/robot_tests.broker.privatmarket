@@ -278,7 +278,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     Wait Until Element Is Visible  ${locator_tenderSearch.searchInput}  timeout=${COMMONWAIT}
 
     Check Current Mode New Realisation
-    Wait Until Element Is Not Visible  xpath=//div[contains(@class,'ajax_overflow')]
+    Wait Until Element Is Not Visible  xpath=//img[@class='spinner']  ${COMMONWAIT}
     Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
 
     ${suite_name}=  Convert To Lowercase  ${SUITE_NAME}
@@ -1820,6 +1820,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     Wait For Ajax
     Reload Page
     Sleep  60s
+    Scroll To Element  xpath=(//a[contains(@ng-class, 'lot-parts')])[1]
     Wait Visibility And Click Element  xpath=(//a[contains(@ng-class, 'lot-parts')])[1]
     Wait For Element With Reload  xpath=//span[@ng-click="act.openAward(b)"]  1
     Wait Visibility And Click Element  xpath=//span[@ng-click="act.openAward(b)"]
