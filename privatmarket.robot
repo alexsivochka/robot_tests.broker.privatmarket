@@ -278,9 +278,9 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     Wait Until Element Is Visible  ${locator_tenderSearch.searchInput}  timeout=${COMMONWAIT}
 
     Check Current Mode New Realisation
-    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
-    Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
-    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
+#    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
+#    Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
+#    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
 
     ${suite_name}=  Convert To Lowercase  ${SUITE_NAME}
     ${education_type}=  Run Keyword If  'negotiation' in '${suite_name}'  Set Variable  False
@@ -3215,9 +3215,9 @@ Try Search Tender
     Check Current Mode New Realisation
 
     #выберем поиск по планам закупок
-    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
-    Run Keyword If  '${type}' == 'plan'  Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
-    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
+#    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
+#    Run Keyword If  '${type}' == 'plan'  Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
+#    Wait Until Keyword Succeeds  1m  1s  Element Attribute Value Should Be  css=.ajax_overflow  class  ajax_overflow ng-hide  loader does not hide
 
     #заполним поле поиска
     Clear Element Text  ${locator_tenderSearch.searchInput}
