@@ -279,7 +279,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
 
     Check Current Mode New Realisation
     Wait Until Element Is Not Visible  xpath=//img[@class='spinner']  ${COMMONWAIT}
-    Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
+#    Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
 
     ${suite_name}=  Convert To Lowercase  ${SUITE_NAME}
     ${education_type}=  Run Keyword If  'negotiation' in '${suite_name}'  Set Variable  False
@@ -3213,7 +3213,7 @@ Try Search Tender
     Check Current Mode New Realisation
 
     #выберем поиск по планам закупок
-    Run Keyword If  '${type}' == 'plan'  Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
+#    Run Keyword If  '${type}' == 'plan'  Wait Visibility And Click Element  css=[data-id='ttype-plans-label']
     Wait Until Element Is Not Visible  xpath=//div[@class='ajax_overflow']  ${COMMONWAIT}
 
     #заполним поле поиска
