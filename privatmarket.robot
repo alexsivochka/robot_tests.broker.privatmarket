@@ -1838,6 +1838,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     Wait Visibility And Click Element  css=button[data-id='setActive']
     Sleep  60s
     Reload Page
+    Scroll To Element  xpath=(//a[contains(@ng-class, 'lot-parts')])[1]
     Wait Visibility And Click Element  xpath=(//a[contains(@ng-class, 'lot-parts')])[1]
     Wait For Element With Reload  xpath=//span[@ng-click="act.openAward(b)"]  1
     Wait Visibility And Click Element  xpath=//span[@ng-click="act.openAward(b)"]
