@@ -2064,6 +2064,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     Run Keyword And Return If  '${field_name}' == 'agreements[0].status'  Отримати статус рамкової угоди  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'funders[0].name'  Get Element Attribute  xpath=//span[@data-id='founder-name']/parent::li@data-founder-name
     Run Keyword And Return If  '${field_name}' == 'funders[0].contactPoint.url'  Get Element Attribute  xpath=//span[@data-id='founder-contact-point-email']/parent::li@data-founder-contact-point-url
+    Run Keyword And Return If  '${field_name}' == 'enquiryPeriod.clarificationsUntil'  Отримати інформацію з ${field_name}  ${field_name}
 
     Wait Until Element Is Visible  ${tender_data_${field_name}}
     ${result_full}=  Get Text  ${tender_data_${field_name}}
@@ -2174,6 +2175,17 @@ Wait For ActiveStage2Waiting
     Run Keyword And Return If  'percentage' in '${field_name}'  Отримати інформацію з milestones.percentage  ${field_value}
     Run Keyword And Return If  'duration.days' in '${field_name}'  Отримати інформацію з milestones.duration.days  ${field_value}
     Run Keyword And Return If  'duration.type' in '${field_name}'  privatmarket_service.get_milestones_duration_type  ${field_value}
+
+
+Отримати інформацію з enquiryPeriod.clarificationsUntil
+    [Arguments]  ${field_value}
+    Scroll To Element  css=a[href*='clarification']
+    Wait Visibility And Click Element  css=a[href*='clarification']
+    ${value}=  Отримати текст елемента  css=p[ng-if*='enquiryPeriod.clarificationsUntil']
+    ${date}=  Get Regexp Matches  ${value}  (\\d{2}:\\d{2} \\d{2}.\\d{2}.\\d{4})  1
+    ${date}=  Convert To String  ${date[0]}
+    ${result}=  privatmarket_service.get_time_with_offset_formatted  ${date}  %H:%M %d.%m.%Y
+    [Return]  ${result}
 
 
 Отримати інформацію з milestones.duration.days
