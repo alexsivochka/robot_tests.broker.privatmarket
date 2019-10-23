@@ -23,7 +23,7 @@ ${locator_tenderAdd.btnSave}  css=button[data-id='actSave']
 ${locator_tenderCreation.buttonSend}  css=button[data-id='actSend']
 ${locator_tenderClaim.buttonCreate}  css=button[data-id='editProcBtn']
 
-${tender_data_title}  css=.title-div [data-id='tender-full-title']
+${tender_data_title}  css=.tender-or-plan-title
 ${tender_data_description}  css=#tenderDescription
 ${tender_data_procurementMethodType}  css=#tenderType
 ${tender_data_status}  css=#tenderStatus
@@ -258,7 +258,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     ...  ELSE  Set Variable  True
 
     Wait For Tender  ${tenderId}  ${education_type}
-    Wait Visibility And Click Element  xpath=//div[@id='${tenderId}']
+    Wait Visibility And Click Element  xpath=//a[@id='${tenderId}']
     Sleep  5s
     Wait Until Element Is Visible  ${tender_data_title}  ${COMMONWAIT}
     Log To Console  ${tenderId}
