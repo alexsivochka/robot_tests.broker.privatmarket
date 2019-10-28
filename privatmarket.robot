@@ -289,7 +289,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     ${type}=  Set Variable  plan
     Wait For Tender  ${tenderId}  ${education_type}  ${type}
 
-    Wait Visibility And Click Element  xpath=//div[@id='${tenderId}']
+    Wait Visibility And Click Element  xpath=//a[@id='${tenderId}']
     Sleep  5s
     Wait Until Element Is Visible  ${tender_data_tenderID}  ${COMMONWAIT}
 
@@ -328,6 +328,8 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     @{items}=  Run Keyword If  ${presence}  Get From Dictionary  ${tender_data.data}  items
     ${presence}=  Run Keyword And Return Status  List Should Contain Value  ${tender_data.data}  features
     @{features}=  Run Keyword If  ${presence}  Get From Dictionary  ${tender_data.data}  features
+    ${presence}=  Run Keyword And Return Status  List Should Contain Value  ${tender_data.data.budget}  breakdown
+    @{breakdowns}=  Run Keyword If  ${presence}  Get From Dictionary  ${tender_data.data.budget}  breakdown
 
     Check Current Mode New Realisation
     Wait Visibility And Click Element  ${locator_tenderSearch.addTender}
@@ -361,6 +363,21 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     ${amount}=  convert_float_to_string  ${tender_data.data.budget.amount}
 
     Run Keyword Unless  '${MODE}' == 'esco'  Input Text  xpath=//input[@data-id='valueAmount']  ${amount}
+
+    ${breakdowns_count}=  Get Length  ${breakdowns}
+
+    : FOR  ${index}  IN RANGE  0  ${breakdowns_count}
+    \  ${index_xpath}=  privatmarket_service.sum_of_numbers  ${index}  1
+    \  ${breakdown_type}=  Run Keyword  privatmarket_service.get_budgetBreakdown  ${breakdowns[${index}].title}
+    \  log many  ${breakdowns[${index}].value.amount}  ${breakdowns[${index}].value}
+    \  log many  ${tender_data.data.budget.breakdown[${index}].value.amount}  ${tender_data.data.budget.breakdown[${index}].value}
+    \  ${amount_value}=  Get From Dictionary  ${breakdowns[${index}].value}  amount
+    \  ${amount}=  Convert To String  ${breakdowns[${index}].value.amount}
+    \  Wait Visibility And Click Element  xpath=//button[@data-id='actAddBreakdown']
+    \  Wait Element Visibility And Input Text  xpath=(//section[@data-id='breakdowns']//input[@data-id='valueAmount'])[${${index_xpath}}]  ${amount}
+    \  Wait Element Visibility And Input Text  xpath=(//*[@data-id='breakdownDescription'])[${index_xpath}]  ${breakdowns[${index}].description}
+    \  Wait Visibility And Click Element  xpath=(//budget-breakdown//button)[${index_xpath}]
+    \  Wait Visibility And Click Element  xpath=(//div[contains(@class,'procuring-entity-select')])[${index_xpath}]//li[text()='${breakdown_type}']
 
     Click Element  xpath=//button[@data-id='actSave']
 

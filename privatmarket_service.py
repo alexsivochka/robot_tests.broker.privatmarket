@@ -423,5 +423,19 @@ def get_mainProcurementCategory (type):
     return type_name
 
 
+def get_budgetBreakdown (type):
+    type_dictionary = {
+        'crimea': u'Бюджет Автономної Республіки Крим',
+        'fund': u'Бюджет цільових фондів',
+        'loan': u'Кредити та позики міжнародних валютно-кредитних організацій',
+        'local': u'Місцевий бюджет',
+        'other': u'Інше',
+        'own': u'Власний бюджет (кошти від господарської діяльності підприємства)',
+        'state': u'Державний бюджет України'
+    }
+    type_name = type_dictionary.get(type)
+    return type_name
+
+
 def change_fake_date():
     return (datetime.datetime.now(timezone('Europe/Kiev')) + timedelta(days=3)).strftime('%Y-%m-%dT%H:%M:%S.%f%z')
