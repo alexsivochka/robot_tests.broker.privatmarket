@@ -31,7 +31,7 @@ ${tender_data_value.amount}  css=#tenderBudget
 ${tender_data_value.currency}  css=#tenderBudgetCcy
 ${tender_data_value.valueAddedTaxIncluded}  css=#tenderBudgetTax
 ${tender_data_tenderID}  css=#tenderId
-${tender_data_procuringEntity.name}  css=a[ng-click^='commonActions.openCard']
+${tender_data_procuringEntity.name}  css=span[ng-click*='procuringEntity']
 ${tender_data_enquiryPeriod.startDate}  id=active.enquiries-bd
 ${tender_data_enquiryPeriod.endDate}  id=active.enquiries-ed
 ${tender_data_tenderPeriod.startDate}  id=active.tendering-bd
