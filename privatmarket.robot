@@ -31,7 +31,7 @@ ${tender_data_value.amount}  css=#tenderBudget
 ${tender_data_value.currency}  css=#tenderBudgetCcy
 ${tender_data_value.valueAddedTaxIncluded}  css=#tenderBudgetTax
 ${tender_data_tenderID}  css=#tenderId
-${tender_data_procuringEntity.name}  css=span[ng-click*='procuringEntity']
+${tender_data_procuringEntity.name}  css=[ng-click*='commonActions.openCard']
 ${tender_data_enquiryPeriod.startDate}  id=active.enquiries-bd
 ${tender_data_enquiryPeriod.endDate}  id=active.enquiries-ed
 ${tender_data_tenderPeriod.startDate}  id=active.tendering-bd
@@ -2153,19 +2153,28 @@ Get contract rationalTypes
 
 
 Wait For ActiveStage2Pending
-    Reload Page
-    Sleep  1s
-    Page Should Contain Element    xpath=//div[@data-tender-status='active.stage2.pending']
+#    Reload Page
+#    Sleep  5s
+#    Page Should Contain Element    xpath=//div[@data-tender-status='active.stage2.pending']
+    Wait Until Keyword Succeeds  10min  20s  Wait For Tender Status  active.stage2.pending
     ${status}=  Get Element Attribute  xpath=//div[@id='tenderStatus']@data-tender-status
     [Return]  ${status}
 
 
 Wait For ActiveStage2Waiting
-    Reload Page
-    Sleep  1s
-    Page Should Contain Element    xpath=//div[@data-tender-status='active.stage2.waiting']
+#    Reload Page
+#    Sleep  1s
+#    Page Should Contain Element    xpath=//div[@data-tender-status='active.stage2.waiting']
+    Wait Until Keyword Succeeds  10min  20s  Wait For Tender Status  active.stage2.waiting
     ${status}=  Get Element Attribute  xpath=//div[@id='tenderStatus']@data-tender-status
     [Return]  ${status}
+
+
+Wait For Tender Status
+    [Arguments]  ${status}
+    Reload Page
+    Sleep  10s
+    Page Should Contain Element    xpath=//div[@data-tender-status='${status}']
 
 
 Отримати інформацію про вид предмету закупівлі
