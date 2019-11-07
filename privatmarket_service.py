@@ -254,7 +254,7 @@ def get_claim_status (status):
         u'Вiдправлено': 'claim',
         u'Отримано вiдповiдь': 'answered',
         u'Задоволено': 'resolved',
-        u'Скасована': 'cancelled',
+        u'Скасовано': 'cancelled',
         u'Не вирiшена, обробляється': 'pending',
         u'Залишена без відповіді': 'ignored',
         u'Не задоволено': 'declined',
