@@ -218,6 +218,8 @@ ${contract_data_amountPaid.amount}  xpath=//div[contains(@ng-repeat,'currentCont
 ${contract_data_period.startDate}  xpath=//dt[text()='Дата початку:']/following-sibling::dd/span
 ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/following-sibling::dd/span
 
+${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
+
 
 *** Keywords ***
 Підготувати дані для оголошення тендера
@@ -1828,8 +1830,11 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
 
 Підтвердити підписання контракту
     [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
-    Wait For Element With Reload  css=input[data-id='contract.title']  1
-    Run Keyword If  '${MODE}' == 'reporting'
+    Відкрити детальну інформацію про контракт
+    Run Keyword If
+    ...  'Неможливість' in '${TEST_NAME}'  Wait Until Element Is Visible  css=input[data-id='contract.title']  5s
+    ...  ELSE  Wait For Element With Reload  css=input[data-id='contract.title']  1
+    Run Keyword If  '${MODE}' == 'reporting' or '${MODE}' == 'negotiation'
     ...  Run Keywords
     ...  Заповнити поля договору  ${tender_uaid}
     ...  AND  Опублікувати договір  ${tender_uaid}
@@ -1837,7 +1842,7 @@ ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/follow
     Wait Visibility And Click Element  xpath=//div[contains(@class,'contracts info')]//div[@id='noEcp']
     Sleep  1s
     Run Keyword  Завантажити ЕЦП
-    Sleep  3min
+    Sleep  2min
 
 
 Заповнити поля договору
@@ -2409,7 +2414,7 @@ Wait For Tender Status
     Run Keyword And Return If  '${field_name}' == 'contracts[0].value.amountNet' or '${field_name}' == 'contracts[1].value.amountNet'  Отримати вартість угоди  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'contracts[0].period.startDate' or '${field_name}' == 'contracts[1].period.startDate'  Отримати інформацію з contracts.period.startDate  ${tender_data_${field_name}}
     Run Keyword And Return If  '${field_name}' == 'contracts[0].period.endDate' or '${field_name}' == 'contracts[1].period.endDate'  Отримати інформацію з contracts.period.endDate  ${tender_data_${field_name}}
-    Run Keyword And Return If  '${field_name}' == 'contracts[0].dateSigned' or '${field_name}' == 'contracts[1].dateSigned'  Отримати дату підписання угоди  ${tender_data_${field_name}}
+    Run Keyword And Return If  '${field_name}' == 'contracts[0].dateSigned' or '${field_name}' == 'contracts[1].dateSigned'  Отримати інформацію з contracts.dateSigned  ${tender_data_${field_name}}
     Wait Until Element Is Visible  ${tender_data_${field_name}}  ${COMMONWAIT}
     ${result_full}=  Get Text  ${tender_data_${field_name}}
     ${result}=  Strip String  ${result_full}
@@ -2436,7 +2441,7 @@ Wait For Tender Status
 Отримати дату підписання угоди
     [Arguments]  ${field_name}
     ${result}=  Get Text  ${field_name}
-    ${result_full}=  Split String  ${result_full}  ${SPACE}
+    ${result_full}=  Split String  ${result}  ${SPACE}
     ${date}=  Set Variable  ${result_full[2]}
     ${result}=  get_time_with_offset_formatted  ${date}  %d.%m.%Y
     [Return]  ${result}
@@ -2465,11 +2470,11 @@ Wait For Tender Status
     Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS}
     ...  Відкрити детальну інформацію про контракт
 
+    Run Keyword And Return If  'contract_doc_documentOf' in @{TEST_TAGS}  Отримати documentOf  ${doc_id}
+
     Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS}
     ...  Wait Until Element Is Visible  xpath=//div[contains(@${field},'${doc_id}')]  ${COMMONWAIT}
     ...  ELSE  Wait For Element With Reload  xpath=//div[contains(@${field},'${doc_id}')]  1
-
-    Run Keyword And Return If  'contract_doc_documentOf' in @{TEST_TAGS}  Отримати documentOf  ${doc_id}
 
     Run Keyword Unless  'contract_doc_documentOf' in @{TEST_TAGS}
     ...  Wait Until Element Is Visible  xpath=//div[contains(@${field},'${doc_id}')]  ${COMMONWAIT}
@@ -3019,19 +3024,22 @@ Scroll To Element
 
 Отримати інформацію з contracts.period.startDate
     [Arguments]  ${field_name}
-    ${date}=  Отримати та привести дату до заданого формату  ${field_name}
+#    ${date}=  Отримати та привести дату до заданого формату  ${field_name}
+    ${date}=  Get Element Attribute  css=*[contract-period-start-date]@contract-period-start-date
     [Return]  ${date}
 
 
 Отримати інформацію з contracts.period.endDate
     [Arguments]  ${field_name}
-    ${date}=  Отримати та привести дату до заданого формату  ${field_name}
+#    ${date}=  Отримати та привести дату до заданого формату  ${field_name}
+    ${date}=  Get Element Attribute  css=*[contract-period-end-date]@contract-period-end-date
     [Return]  ${date}
 
 
 Отримати інформацію з contracts.dateSigned
     [Arguments]  ${field_name}
-    ${date}=  Отримати та привести дату до заданого формату  ${field_name}
+#    ${date}=  Отримати та привести дату до заданого формату  ${field_name}
+    ${date}=  Get Element Attribute  css=*[contract-date-signed]@contract-date-signed
     [Return]  ${date}
 
 
@@ -3290,6 +3298,7 @@ Try Search Element
     ...  ELSE IF  '${tab_number}' == '1' and '${TEST_NAME}' == 'Можливість укласти угоду для закупівлі'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and '${TEST_NAME}' == 'Можливість укласти угоду для звіту про укладений договір'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and '${TEST_NAME}' == 'Можливість укласти угоду для переговорної процедури'  Відкрити детальну інформацію про контракт
+    ...  ELSE IF  '${tab_number}' == '1' and 'Неможливість укласти угоду' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and 'редагувати вартість угоди' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and 'пропозицію кваліфікації' in '${TEST_NAME}'  Wait Visibility And Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
     ...  ELSE IF  '${tab_number}' == '1' and 'вичитати посилання на аукціон' in '${TEST_NAME}'  Відкрити модальне вікно з посиланням на аукціон
