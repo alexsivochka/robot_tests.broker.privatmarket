@@ -1216,7 +1216,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Run Keyword If  '${parameter}' == 'description'  Wait Element Visibility And Input Text  css=textarea[data-id='procurementDescription']  ${value}
     Run Keyword If  '${parameter}' == 'maxAwardsCount'  Wait Element Visibility And Input Text  css=input[data-id='maxAwardsCount']  ${value}
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
-    Wait Until Element Is Visible  css=section[data-id='step2']  ${COMMONWAIT}
+#    Wait Until Element Is Visible  css=section[data-id='step2']  ${COMMONWAIT}
 
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
 
