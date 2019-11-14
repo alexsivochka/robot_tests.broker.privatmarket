@@ -2415,6 +2415,8 @@ Wait For Tender Status
     Run Keyword And Return If  '${field_name}' == 'contracts[0].period.startDate' or '${field_name}' == 'contracts[1].period.startDate'  Отримати інформацію з contracts.period.startDate  ${tender_data_${field_name}}
     Run Keyword And Return If  '${field_name}' == 'contracts[0].period.endDate' or '${field_name}' == 'contracts[1].period.endDate'  Отримати інформацію з contracts.period.endDate  ${tender_data_${field_name}}
     Run Keyword And Return If  '${field_name}' == 'contracts[0].dateSigned' or '${field_name}' == 'contracts[1].dateSigned'  Отримати інформацію з contracts.dateSigned  ${tender_data_${field_name}}
+    Run Keyword And Return If  '${field_name}' == 'awards' and 'вартості угоди без урахування ПДВ' in '${TEST_NAME}'  Отримати вартість угоди без урахування ПДВ
+    Run Keyword And Return If  '${field_name}' == 'awards' and 'вартості угоди' in '${TEST_NAME}'  Отримати вартість угоди  ${field_name}
     Wait Until Element Is Visible  ${tender_data_${field_name}}  ${COMMONWAIT}
     ${result_full}=  Get Text  ${tender_data_${field_name}}
     ${result}=  Strip String  ${result_full}
@@ -2424,13 +2426,29 @@ Wait For Tender Status
 Дочекатися відображення активного контракту
     Reload Page
     Відкрити детальну інформацію про контракт
-    Wait Until Element Is Visible  xpath=//div[contains(@class,'contracts info')]
+    Wait Until Element Is Visible  xpath=//div[contains(@class,'contracts info')] | //div[contains(@class,'contract-body')]
 
 
 Отримати вартість угоди
     [Arguments]  ${field_name}
-    Wait Until Element Is Visible  xpath=//*[@id='contractAmount']  ${COMMONWAIT}
-    ${text}=  Get Text  ${tender_data_${field_name}}
+    ${xpath}=  Set Variable  xpath=//*[@id='contractAmount'] | //input[@data-id='contract-value-amount-input']
+    Wait Until Element Is Visible  ${xpath}  ${COMMONWAIT}
+    ${text}=  Get Text  ${xpath}
+#    ${text}=  Run Keyword If  '${text}' == ${EMPTY}  Get Value  ${xpath}
+    ${text}=  Replace String Using Regexp  ${text}  \\W+$  ${EMPTY}
+    ${text_new}=  Strip String  ${text}
+    ${value}=  Replace String  ${text_new}  ${SPACE}  ${EMPTY}
+    ${result}=  convert to number  ${value}
+    [Return]  ${result}
+
+
+Отримати вартість угоди без урахування ПДВ
+    ${xpath}=  Set Variable  xpath=//*[text()='Ціна договору без ПДВ:']/following-sibling::dd | //input[@data-id='contract-value-amount-input']
+    Wait Until Element Is Visible  ${xpath}  ${COMMONWAIT}
+    ${text}=  Run Keyword If  ${ROLE} == 'viewer
+    ...  Get Text  ${xpath}
+    ...  ELSE  Get Value  ${xpath}
+#    ${text}=  Run Keyword If  '${text}' == '${EMPTY}'  Get Value  ${xpath}
     ${text}=  Replace String Using Regexp  ${text}  \\W+$  ${EMPTY}
     ${text_new}=  Strip String  ${text}
     ${value}=  Replace String  ${text_new}  ${SPACE}  ${EMPTY}
@@ -3797,7 +3815,7 @@ Get Item Number
     :FOR  ${item}  In Range  0  ${count}
     \  ${item}=  privatmarket_service.sum_of_numbers  ${item}  1
     \  Click Element  xpath=(//button[contains(@id, 'dropdownMenu')])[${item}]
-    \  Click Element  xpath=(//ul[@class='dropdown-menu btn-feature-dropdown-menu'])[${item}]/li[1]
+    \  Run Keyword Unless  '${MODE}' == 'framework_selection'  Click Element  xpath=(//ul[@class='dropdown-menu btn-feature-dropdown-menu'])[${item}]/li[1]
     \  Sleep  1s
 
     ${input_field}=  Set Variable If  ${NUMBER_OF_LOTS} == 0  input[id='price']  input[id^='userprice-lot']
