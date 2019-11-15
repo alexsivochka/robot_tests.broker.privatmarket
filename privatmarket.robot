@@ -214,6 +214,7 @@ ${contract_data_changes[0].rationale}  xpath=//div[contains(@class,'change-info'
 ${contract_data_terminationDetails}  xpath=//div[text()='Причини розiрвання:']/following-sibling::div/span
 ${contract_data_rationale}  //div[contains(@class,'change-info')]//span[contains(@ng-repeat,'rationaleTypes')]/span[1]
 ${contract_data_title}  xpath=//dt[text()='Назва договору:']/following-sibling::dd
+${contract_data_description}  xpath=//dt[text()='Опис договору:']/following-sibling::dd
 ${contract_data_amountPaid.amount}  xpath=//div[contains(@ng-repeat,'currentContr.pays')]/div[2]
 ${contract_data_period.startDate}  xpath=//dt[text()='Дата початку:']/following-sibling::dd/span
 ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/following-sibling::dd/span
@@ -2042,13 +2043,25 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
 
     Run Keyword And Return If  '${field_name}' == 'changes[0].rationaleTypes'  Get contract rationalTypes  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'amountPaid.amount'  Отримати суму з контракту  ${field_name}
-    Run Keyword And Return If  '${field_name}' == 'period.startDate'  Отримати дату з контракту  ${field_name}
-    Run Keyword And Return If  '${field_name}' == 'period.endDate'  Отримати дату з контракту  ${field_name}
+    Run Keyword And Return If  '${field_name}' == 'period.startDate'  Отримати інформацію з contracts.period.startDate  ${field_name}
+    Run Keyword And Return If  '${field_name}' == 'period.endDate'  Отримати інформацію з contracts.period.endDate  ${field_name}
+    Run Keyword And Return If  '${field_name}' == 'status'  Отримати статус контракту  ${field_name}
 
     Wait Until Element Is Visible  ${contract_data_${field_name}}
     ${result_full}=  Get Text  ${contract_data_${field_name}}
     ${result}=  Strip String  ${result_full}
     [Return]  ${result}
+
+
+Отримати статус контракту
+    [Arguments]  ${field_name}
+    Wait Until Element Is Visible  css=#contractStatus  ${COMMONWAIT}
+    ${status_name}=  Get text  css=#contractStatus
+    ${status_name}=  Strip String  ${status_name}
+    ${status_type}=  Set Variable If
+    ...  'Завершено' == '${status_name}'  terminated
+    ...  ELSE  ${status_name}
+    [Return]  ${status_type}
 
 
 Get contract rationalTypes
@@ -2070,7 +2083,7 @@ Get contract rationalTypes
 Отримати суму з контракту
 	[Arguments]  ${field_name}
 	Wait Until Keyword Succeeds  10min  10s  Дочекатися публікації дійсно сплаченої суми договору
-	${result_full}=  Get Text  ${contract_data_${field_name}}
+	${result_full}=  Get Text  //div[contains(@ng-repeat,'pays')]/div[2]
     ${text}=  Strip String  ${result_full}
     ${text_new}=  Replace String  ${text}  ${SPACE}  ${EMPTY}
     ${result}=  convert to number  ${text_new}
@@ -3327,6 +3340,7 @@ Try Search Element
     ...  ELSE IF  '${tab_number}' == '1' and 'підтвердити постачальника' in '${TEST_NAME}'  Відкрити детальну інформацію про постачальника
     ...  ELSE IF  '${tab_number}' == '1' and 'підтвердити учасника' in '${TEST_NAME}'  Відкрити детальну інформацію про постачальника
     ...  ELSE IF  '${tab_number}' == '1' and 'договору' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
+    ...  ELSE IF  '${tab_number}' == '1' and 'обсягу дійсно оплаченої суми' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and 'статусу зареєстрованої угоди' in '${TEST_NAME}'  Відкрити детальну інформацію про рамкові угоди
     ...  ELSE IF  '${tab_number}' == '1'  Відкрити детальну інформацію по позиціям
     ...  ELSE IF  '${tab_number}' == '2' and 'відповіді на запитання' in '${TEST_NAME}'  Відкрити повну відповідь на запитання
@@ -3785,7 +3799,7 @@ Get Item Number
     @{contactPoint} =  Split String  ${question.data.author.contactPoint.name}
     Wait Element Visibility And Input Text  css=#personSurname  @{contactPoint}[0]
     Wait Element Visibility And Input Text  css=#personName  @{contactPoint}[1]
-    Wait Element Visibility And Input Text  css=#personPatronymic  @{contactPoint}[0]    # Используем 0 так как @{contactPoint}[2] невалидное значение
+    Wait Element Visibility And Input Text  css=#personPatronymic  @{contactPoint}[0]
     Wait Element Visibility And Input Text  css=#personPhone  ${question.data.author.contactPoint.telephone}
     Wait Element Visibility And Input Text  css=#personFax  ${question.data.author.contactPoint.faxNumber}
     Wait Element Visibility And Input Text  css=#personEmail  ${question.data.author.contactPoint.email}
@@ -3836,8 +3850,10 @@ Get Item Number
     Wait For Ajax
 
     ${scenarios_name}=  privatmarket_service.get_scenarios_name
-    Run Keyword Unless  'single_item' in '${scenarios_name}' or 'below' in '${scenarios_name}'  Wait Visibility And Click Element  css=label[data-id='toggle-qualified']
-    Run Keyword Unless  'single_item' in '${scenarios_name}' or 'below' in '${scenarios_name}'  Wait Visibility And Click Element  css=label[data-id='toggle-eligible']
+    Run Keyword Unless  'single_item' in '${scenarios_name}' or 'below' in '${scenarios_name}' or 'framework_selection' in '${scenarios_name}'
+    ...  Wait Visibility And Click Element  css=label[data-id='toggle-qualified']
+    Run Keyword Unless  'single_item' in '${scenarios_name}' or 'below' in '${scenarios_name}' or 'framework_selection' in '${scenarios_name}'
+    ...  Wait Visibility And Click Element  css=label[data-id='toggle-eligible']
 
     Wait Visibility And Click Element  xpath=//select[contains(@class,'company-scale')]/option[@value='string:${bid.data.tenderers[0].scale}']
 
@@ -3852,7 +3868,8 @@ Get Item Number
     Wait Element Visibility And Input Text  css=input[data-id='email']  ${bid.data.tenderers[0].contactPoint.email}
     Click Button  css=button[data-id='save-bid-btn']
     Wait For Ajax
-    Run Keyword Unless  'на другому етапі' in '${TEST_NAME}'  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
+    Run Keyword Unless  'на другому етапі' in '${TEST_NAME}' or 'framework_selection' in '${scenarios_name}'
+    ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
     Sleep  60s
@@ -4186,12 +4203,14 @@ Get Item Number
 
 Отримати інформацію із документа до договору
     [Arguments]  ${username}  ${contract_uaid}  ${doc_id}  ${field}
-    privatmarket.Отримати інформацію із документа  ${username}  ${contract_uaid}  ${doc_id}  ${field}
+    ${result}=  privatmarket.Отримати інформацію із документа  ${username}  ${contract_uaid}  ${doc_id}  ${field}
+    [Return]  ${result}
 
 
 Отримати документ до договору
     [Arguments]  ${username}  ${contract_uaid}  ${doc_id}
-    privatmarket.Отримати документ  ${username}  ${contract_uaid}  ${doc_id}
+    ${file_name}=  privatmarket.Отримати документ  ${username}  ${contract_uaid}  ${doc_id}
+    [Return]  ${file_name}
 
 
 Редагувати поле договору
