@@ -4007,6 +4007,7 @@ Get Item Number
 
 Завантажити документ в ставку
     [Arguments]  ${username}  ${filePath}  ${tenderId}  ${doc_type}=documents  ${doc_type}=${None}
+    ${scenarios_name}=  privatmarket_service.get_scenarios_name
     ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  ${tender_data_title}  5s
     Run Keyword If  '${status}' == 'False'  privatmarket.Пошук тендера по ідентифікатору  ${username}  ${tenderId}
     Wait For Element With Reload  xpath=//button[@data-id="editBidBtn"]  1  1
@@ -4026,7 +4027,8 @@ Get Item Number
     Wait For Ajax
     Click Button  css=button[data-id='save-bid-btn']
     Sleep  10s
-    Run Keyword Unless  '${mode}' == 'open_esco'  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
+    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
     Sleep  90s
@@ -4035,6 +4037,7 @@ Get Item Number
 
 Змінити документ в ставці
     [Arguments]  ${username}  ${tender_uaid}  ${path}  ${doc_id}  ${doc_type}=documents
+    ${scenarios_name}=  privatmarket_service.get_scenarios_name
     Wait Visibility And Click Element  xpath=//button[@data-id="editBidBtn"]
     Sleep  2s
     Run Keyword Unless  'openUA' in '${mode}'  Wait Visibility And Click Element  css=button[data-id='save-bid-btn']
@@ -4050,7 +4053,8 @@ Get Item Number
     Wait For Ajax
     Click Button  css=button[data-id='save-bid-btn']
     Wait For Ajax
-    Run Keyword Unless  '${mode}' == 'open_esco'  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
+    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
     Sleep  60s
@@ -4058,6 +4062,7 @@ Get Item Number
 
 Змінити документацію в ставці
     [Arguments]  ${username}  ${tender_uaid}  ${doc_data}  ${doc_id}
+    ${scenarios_name}=  privatmarket_service.get_scenarios_name
     ${tender_type}=  Отримати інформацію з procurementMethodType
     Wait Visibility And Click Element  xpath=//button[@data-id="editBidBtn"]
     Wait For Ajax
@@ -4076,7 +4081,8 @@ Get Item Number
     Wait For Ajax
     Wait Visibility And Click Element  css=button[data-id='save-bid-btn']
     Sleep  1s
-    Run Keyword Unless  '${mode}' == 'open_esco'  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
+    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
     Sleep  60s
@@ -4085,6 +4091,7 @@ Get Item Number
 Змінити цінову пропозицію
     [Arguments]  ${username}  ${tender_uaid}  ${field}  ${value}
 
+    ${scenarios_name}=  privatmarket_service.get_scenarios_name
     Run Keyword If  '${field}' == 'status'  Wait Visibility And Click Element  xpath=//button[@data-id="createBidBtn"]
     ...  ELSE  Wait Visibility And Click Element  xpath=//button[@data-id="editBidBtn"]
     Sleep  2s
@@ -4103,7 +4110,8 @@ Get Item Number
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modalOkBtn']
     Wait Visibility And Click Element  css=button[data-id='save-bid-btn']
     Wait For Ajax
-    Run Keyword Unless  '${mode}' == 'open_esco'  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
+    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
     Sleep  60s
