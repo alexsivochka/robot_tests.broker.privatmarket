@@ -1063,6 +1063,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Додати lots  ${lots}  ${items}  ${type}
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Sleep  5s
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
 
@@ -1262,7 +1263,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Wait Element Visibility And Input Text  xpath=(//textarea[@data-id='lotDescription'])[1]  ${value}
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
-
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
 
     Wait For Ajax
@@ -1278,6 +1279,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Wait Visibility And Click Element  ${locator_tenderClaim.buttonCreate}
     Wait For Ajax
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Лоти та предмети закупівлі']
     ${value_amount}=  privatmarket_service.convert_float_to_string  ${value}
     Wait Element Visibility And Input Text  css=input[data-id='valueAmount']  ${value_amount}
@@ -1290,6 +1292,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Wait Element Visibility And Input Text  css=input[data-id='minimalStepAmount']  ${minimalStep_amount}
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//div[contains(@id,'tab')][last()]
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1328,6 +1331,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1366,6 +1370,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1404,6 +1409,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1427,6 +1433,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     ...  ELSE IF  'на предмет' in '${TEST_NAME}'  Wait Visibility And Click Element  xpath=(//*[@data-id='item']//button[@data-id='actRemove'])[last()]
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1447,6 +1454,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Wait Visibility And Click Element  xpath=//select[@data-id='funder']/option[@value='none']
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1465,6 +1473,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Wait Visibility And Click Element  xpath=//select[@data-id='funder']/option[@value='${funders_data.identifier.id}']
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1498,6 +1507,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Sleep  5s
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Until Element Is Visible  xpath=//span[@title='Перевірка та публікація']  ${COMMONWAIT}
     Sleep  1s
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1534,6 +1544,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Sleep  5s
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Until Element Is Visible  xpath=//span[@title='Перевірка та публікація']  ${COMMONWAIT}
     Wait For Ajax
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
@@ -1936,6 +1947,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Run Keyword And Return If  'Неможливість' in '${TEST_NAME}' and '${field_name}' == 'value.amountNet'
     ...  Should Be Equal As Numbers  ${value}  ${amountNet}
     ...  Amount should be greater than amountNet and differ by no more than 20.0%
+
     Sleep  60s
     Reload Page
 
