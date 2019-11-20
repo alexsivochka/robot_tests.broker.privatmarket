@@ -3263,13 +3263,20 @@ Login
     Input Text  css=input[data-id='enter-pwd']  ${USERS.users['${username}'].password}
     Wait Visibility And Click Element  css=button[data-id='enter-submit']
     Wait For Ajax
+
+    ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  css=section.offer-acceptation  10s
+    Run Keyword If  '${status}' == 'True'
+    ...  Run Keywords
+    ...  Wait Visibility And Click Element  css=section.offer-acceptation label>span
+    ...  AND  Wait Visibility And Click Element  css=button.btn-primary
+
     Wait Until Element Is Visible  css=.company-name  timeout=30
 
 
 Wait Visibility And Click Element
     [Arguments]  ${elementLocator}
     Wait Until Element Is Visible  ${elementLocator}  ${COMMONWAIT}
-    Scroll Page To Element  ${elementLocator}
+#    Scroll Page To Element  ${elementLocator}
     Wait Until Element Is Enabled  ${elementLocator}  ${COMMONWAIT}
     Click Element  ${elementLocator}
 
