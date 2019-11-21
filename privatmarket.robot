@@ -219,7 +219,7 @@ ${contract_data_amountPaid.amount}  xpath=//div[contains(@ng-repeat,'currentCont
 ${contract_data_period.startDate}  xpath=//dt[text()='Дата початку:']/following-sibling::dd/span
 ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/following-sibling::dd/span
 
-${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
+${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //*[text()='Ідентифікатор рамкової угоди:']/following-sibling::dd
 
 
 *** Keywords ***
@@ -279,6 +279,14 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     privatmarket.Пошук тендера по ідентифікатору  ${username}  ${tenderId}
     Відкрити детальну інформацію про контракт
     Page Should Contain  ${contract_uaid}
+
+
+Пошук угоди по ідентифікатору
+    [Arguments]  ${username}  ${agreement_uaid}
+    ${agreementId}=  Remove String Using Regexp  ${agreement_uaid}  -\\w+\\d$
+    privatmarket.Пошук тендера по ідентифікатору  ${username}  ${agreementId}
+    Відкрити детальну інформацію про рамкові угоди
+    Page Should Contain  ${agreement_uaid}
 
 
 Пошук плану по ідентифікатору
@@ -1220,8 +1228,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  ${locator_tenderClaim.buttonCreate}
 
-    ${status}=  Run Keyword And Return Status  Page Should Contain  Закінчення періоду прийому пропозицій не повинно бути ближче  10s
-    Run Keyword If  '${status}' == 'False'  privatmarket.Пошук тендера по ідентифікатору  ${tender_owner}  ${tender_uaid}
+#    ${status}=  Run Keyword And Return Status  Page Should Contain  Закінчення періоду прийому пропозицій не повинно бути ближче  10s
+#    Run Keyword If  '${status}' == 'False'  privatmarket.Пошук тендера по ідентифікатору  ${tender_owner}  ${tender_uaid}
 
     Run Keyword And Return If  'Неможливість редагувати однопредметний тендер менше ніж за 2 дні' in '${TEST_NAME}'  Перевірити неможливість внесення змін в тендер
 
@@ -1762,6 +1770,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
 
 Відкрити детальну інформацію по позиціям
     Відкрити детальну інформацію по лотам
+    Wait Until Element Is Visible  css=.lot-info .description a
     ${elements}=  Get Webelements  css=.lot-info .description a
     ${count}=  Get_Length  ${elements}
     :FOR  ${item}  In Range  0  ${count}
@@ -1867,7 +1876,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Відкрити детальну інформацію про контракт
     Run Keyword If
     ...  'Неможливість' in '${TEST_NAME}'  Wait Until Element Is Visible  css=input[data-id='contract.title']  5s
-    ...  ELSE  Wait For Element With Reload  css=input[data-id='contract.title']  1
+    ...  ELSE  Wait For Element With Reload  xpath=//input[@data-id='contract.title'] | //div[contains(@class,'contracts')]  1
     Run Keyword If  '${MODE}' == 'reporting' or '${MODE}' == 'negotiation'
     ...  Run Keywords
     ...  Заповнити поля договору  ${tender_uaid}
@@ -1972,28 +1981,24 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     [Arguments]  ${username}  ${tender_uaid}  ${contract_num}  ${dateSigned}
     Reload Page
     Відкрити детальну інформацію про контракт
-    ${signed_day}=  Get Regexp Matches  ${dateSigned}  \\d{2}(?=T)
-    ${signed_day}=  Replace String Using Regexp  ${signed_day[0]}  ^0  ${EMPTY}
-    Wait Visibility And Click Element  xpath=//input[@name='dateSigned']
-    Wait Visibility And Click Element  xpath=//div[@class='datepicker-days']//td[text()='${signed_day}']
+    ${signed}=  Execute Javascript  return new Date("${dateSigned}").getTime();
+    Set Global Variable  ${contract_date_signed}  ${signed}
+    Execute Javascript  var contractHash = angular.element('[data-id=contractHash]').text().trim(); angular.element('[ng-controller=contract_edit_ctrl]').scope().injectDates({id: contractHash,dateSigned: ${contract_date_signed}});
     Wait Until Element Is Enabled  css=button[ng-click="act.saveContract('pending')"]  ${COMMONWAIT}
     Click Button  css=button[ng-click="act.saveContract('pending')"]
     Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
-    sleep  5s
+    sleep  2s
 
 
 Вказати період дії угоди
     [Arguments]  ${username}  ${tender_uaid}  ${contract_num}  ${startDate}  ${endDate}
     Reload Page
     Відкрити детальну інформацію про контракт
-    ${startDay}=  Get Regexp Matches  ${startDate}  \\d{2}(?=T)
-    ${endDay}=  Get Regexp Matches  ${endDate}  \\d{2}(?=T)
-    ${startDay}=  Replace String Using Regexp  ${startDay[0]}  ^0  ${EMPTY}
-    ${endDay}=  Replace String Using Regexp  ${endDay[0]}  ^0  ${EMPTY}
-    Wait Visibility And Click Element  xpath=//input[@name='startDate']
-    Wait Visibility And Click Element  xpath=//div[@class='datepicker-days']//td[text()='${startDay}']
-    Wait Visibility And Click Element  xpath=//input[@name='endDate']
-    Wait Visibility And Click Element  xpath=//div[@class='datepicker-days']//td[text()='${endDay}']
+    ${start}=  Execute Javascript  return new Date("${startDate}").getTime();
+    Set Global Variable  ${contract_start_date}  ${start}
+    ${end}=  Execute Javascript  return new Date("${endDate}").getTime();
+    Set Global Variable  ${contract_end_date}  ${end}
+    Execute Javascript  var contractHash = angular.element('[data-id=contractHash]').text().trim(); angular.element('[ng-controller=contract_edit_ctrl]').scope().injectDates({id: contractHash,startDate: ${contract_start_date}, endDate: ${contract_end_date}});
     Wait Until Element Is Enabled  css=button[ng-click="act.saveContract('pending')"]  ${COMMONWAIT}
     Click Button  css=button[ng-click="act.saveContract('pending')"]
     Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
@@ -2010,9 +2015,11 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Sleep  1s
     Choose File  xpath=//div[@class='form-block__item']/form/div/input  ${file_path}
     Sleep  5s
-    Wait Until Element Is Enabled  css=button[ng-click="act.saveContract('pending')"]  ${COMMONWAIT}
-    Click Button  css=button[ng-click="act.saveContract('pending')"]
-    Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
+    Execute Javascript  var contractHash = angular.element('[data-id=contractHash]').text().trim(); angular.element('[ng-controller=contract_edit_ctrl]').scope().injectDates({id: contractHash,dateSigned: ${contract_date_signed}});
+    Execute Javascript  var contractHash = angular.element('[data-id=contractHash]').text().trim(); angular.element('[ng-controller=contract_edit_ctrl]').scope().injectDates({id: contractHash,startDate: ${contract_start_date}, endDate: ${contract_end_date}});
+    Wait Element Visibility And Input Text  css=input[data-id='contract.title']  ${tender_uaid}
+    Wait Element Visibility And Input Text  css=#contractNumber  ${tender_uaid}
+    Опублікувати договір  ${tender_uaid}
     sleep  60s
 
 
@@ -2058,6 +2065,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id]
     Run Keyword And Return If  'milestones' in '${field_name}'  Отримати інформацію про умови оплати  ${field_name}
     Run Keyword And Return If  'mainProcurementCategory' in '${field_name}'  Отримати інформацію про вид предмету закупівлі  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'agreements[0].status'  Отримати статус рамкової угоди  ${field_name}
+    Run Keyword And Return If  '${field_name}' == 'agreements[0].agreementID'  Відкрити детальну інформацію про рамкові угоди
     Run Keyword And Return If  '${field_name}' == 'funders[0].name'  Get Element Attribute  xpath=//span[@data-id='founder-name']/parent::li@data-founder-name
     Run Keyword And Return If  '${field_name}' == 'funders[0].contactPoint.url'  Get Element Attribute  xpath=//span[@data-id='founder-contact-point-email']/parent::li@data-founder-contact-point-url
     Run Keyword And Return If  '${field_name}' == 'enquiryPeriod.clarificationsUntil'  Отримати інформацію з ${field_name}  ${field_name}
@@ -3616,7 +3624,7 @@ Get Item Number
 
 
 Дочекатися завантаження сторінки підписання ЕЦП
-    ${passed}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//select[@id='CAsServersSelect']
+    ${passed}=  Run Keyword And Return Status  Element Should Be Enabled  id:PKeyPassword
     Run Keyword Unless  '${passed}' == 'PASS'  Reload Page
 
 
