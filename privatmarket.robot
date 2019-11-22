@@ -2095,6 +2095,43 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     [Return]  ${result}
 
 
+Отримати інформацію із угоди
+    [Arguments]  ${user_name}  ${agreement_uaid}  ${field_name}
+    sleep  15s
+    Reload Page
+    Wait For Element With Reload  css=div.agreements  1
+    Wait Visibility And Click Element  xpath=//*[text()='Зміни до рамкової угоди']
+
+#    :FOR  ${i}  In Range  0  ${changes_count}
+#    \  ${elem_index}=  Evaluate  ${i}+1
+#    \  Scroll To Element  xpath=(//*[@data-id='change']//span[@data-id='change-open'])[${elem_index}]
+#    \  Click Element  xpath=(//*[@data-id='change']//span[@data-id='change-open'])[${elem_index}]
+    Wait Visibility And Click Element  xpath=(//*[@data-id='change']//span[@data-id='change-open'])[1]
+    Run Keyword And Return If  'rationaleType' in '${field_name}'  Get Element Attribute  xpath=(//*[@data-id='change'])[1]//p[@data-id='rationale-type']@data-rationale-type
+    Run Keyword And Return If  'rationale' in '${field_name}'  Get Text  xpath=(//*[@data-id='change'])[1]//div[@data-id='change-rationale']
+    Run Keyword And Return If  'status' in '${field_name}'  Get Element Attribute  xpath=(//*[@data-id='change'])[1]//span[@data-id='change-status']@data-change-status
+    Run Keyword And Return If  'modifications[0].itemId' in '${field_name}'  Get Text  xpath=(//*[@data-id='change'])[1]//div[@data-id='change-modification-description']
+    Run Keyword And Return If  'modifications[0].contractId' in '${field_name}'  Get Text  xpath=(//*[@data-id='change'])[1]//p[@data-id='change-supplier']
+    Run Keyword And Return If  'modifications[0].addend' in '${field_name}'  Get modifications.addend  ${field_name}
+    Run Keyword And Return If  'modifications[0].factor' in '${field_name}'  Get modifications.factor  ${field_name}
+
+
+Get modifications.addend
+    [Arguments]  ${field_name}
+    ${result}=  Get Text  xpath=(//*[@data-id='change'])[1]//div[@data-id='modification-addend']
+    ${result}=  Replace String  ${result}  ,  .
+    ${result}=  Convert To Number  ${result}
+    [Return]  ${result}
+
+
+Get modifications.factor
+    [Arguments]  ${field_name}
+    ${result}=  Get Text  xpath=(//*[@data-id='change'])[1]//div[@data-id='modification-factor']
+    ${result}=  Replace String Using Regexp  ${result}  %$  ${EMPTY}
+    ${result}=  Convert To Number  ${result}
+    [Return]  ${result}
+
+
 Отримати статус контракту
     [Arguments]  ${field_name}
     Wait Until Element Is Visible  css=#contractStatus  ${COMMONWAIT}
@@ -3392,6 +3429,8 @@ Try Search Element
     ...  ELSE IF  '${tab_number}' == '1' and 'договору' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and 'обсягу дійсно оплаченої суми' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and 'статусу зареєстрованої угоди' in '${TEST_NAME}'  Відкрити детальну інформацію про рамкові угоди
+    ...  ELSE IF  '${tab_number}' == '1' and 'change_view' in @{TEST_TAGS}  Відкрити детальну інформацію про рамкові угоди
+    ...  ELSE IF  '${tab_number}' == '1' and 'modification_view' in @{TEST_TAGS}  Відкрити детальну інформацію про рамкові угоди
     ...  ELSE IF  '${tab_number}' == '1'  Відкрити детальну інформацію по позиціям
     ...  ELSE IF  '${tab_number}' == '2' and 'відповіді на запитання' in '${TEST_NAME}'  Відкрити повну відповідь на запитання
     ...  ELSE IF  '${tab_number}' == '3' and 'заголовку документації' in '${TEST_NAME}'  Відкрити інформацію про вкладені файли вимоги
