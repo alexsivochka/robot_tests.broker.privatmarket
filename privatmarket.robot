@@ -214,12 +214,12 @@ ${contract_data_changes[0].rationale}  xpath=//div[contains(@class,'change-info'
 ${contract_data_terminationDetails}  xpath=//div[text()='Причини розiрвання:']/following-sibling::div/span
 ${contract_data_rationale}  //div[contains(@class,'change-info')]//span[contains(@ng-repeat,'rationaleTypes')]/span[1]
 ${contract_data_title}  xpath=//dt[text()='Назва договору:']/following-sibling::dd
-${contract_data_description}  xpath=//dt[text()='Опис договору:']/following-sibling::dd
+${contract_data_description}  xpath=//*[@data-id='contractDescription']
 ${contract_data_amountPaid.amount}  xpath=//div[contains(@ng-repeat,'currentContr.pays')]/div[2]
 ${contract_data_period.startDate}  xpath=//dt[text()='Дата початку:']/following-sibling::dd/span
 ${contract_data_period.endDate}  xpath=//dt[text()='Дата кiнця:']/following-sibling::dd/span
 
-${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //*[text()='Ідентифікатор рамкової угоди:']/following-sibling::dd
+${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //*[@data-id="agreement-id"]
 
 
 *** Keywords ***
@@ -1501,6 +1501,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Until Element Is Visible  css=input[data-id='procurementName']  ${COMMONWAIT}
     Wait Until Keyword Succeeds  1min  10s  Звiрити value of title на сторінці редагуванння  ${user_name}
     #откроем нужную вкладку
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Документація']
 
     #загрузим файл
@@ -1538,6 +1539,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Sleep  2s
     Wait Until Element Is Visible  css=input[data-id='procurementName']  ${COMMONWAIT}
     Wait Until Keyword Succeeds  1min  10s  Звiрити value of title на сторінці редагуванння  ${user_name}
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Документація']
     Sleep  2s
     Wait Visibility And Click Element  css=label[for='documentation_lot_yes']
@@ -1615,16 +1617,16 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
     Wait Visibility And Click Element  xpath=//label[@for='chkSelfQualified']
     Wait Visibility And Click Element  xpath=//label[@for='chkSelfEligible']
-    Wait Visibility And Click Element  xpath=//div[@class='files-upload']//select[@class='form-block__select form-block__select_short']//option[2]
-    Sleep  1s
-    Wait Visibility And Click Element  xpath=//div[@class='files-upload']//select[@class='form-block__select ng-scope form-block__select_short']//option[2]
-    Sleep  1s
-
-    ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
-    Run Keyword And Ignore Error  Execute Javascript  document.querySelector(".files-upload input[type='file']").class = ''
-    Sleep  1s
-    Choose File  xpath=//div[@class='files-upload']//input[@type='file']  ${file_path}
-    Sleep  5s
+#    Wait Visibility And Click Element  xpath=//div[@class='files-upload']//select[@class='form-block__select form-block__select_short']//option[2]
+#    Sleep  1s
+#    Wait Visibility And Click Element  xpath=//div[@class='files-upload']//select[@class='form-block__select ng-scope form-block__select_short']//option[2]
+#    Sleep  1s
+#
+#    ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
+#    Run Keyword And Ignore Error  Execute Javascript  document.querySelector(".files-upload input[type='file']").class = ''
+#    Sleep  1s
+#    Choose File  xpath=//div[@class='files-upload']//input[@type='file']  ${file_path}
+#    Sleep  5s
 
     #Допустити до аукциону
     Wait Visibility And Click Element  xpath=//button[@data-id='setQualStatusActive']
@@ -2025,6 +2027,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 Отримати інформацію зі сторінки
     [Arguments]  ${user_name}  ${base_tender_uaid}  ${field_name}
+    ${scenarios_name}=  privatmarket_service.get_scenarios_name
     Run Keyword And Return If  '${field_name}' == 'value.amount'  Convert Amount To Number  ${field_name}
     Run Keyword And Return If  'stage2_pending_status_view' in @{TEST_TAGS}  Дочекатися статусу
     Run Keyword And Return If  '${field_name}' == 'value.currency'  Отримати інформацію з ${field_name}  ${field_name}
@@ -2065,11 +2068,11 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword And Return If  'milestones' in '${field_name}'  Отримати інформацію про умови оплати  ${field_name}
     Run Keyword And Return If  'mainProcurementCategory' in '${field_name}'  Отримати інформацію про вид предмету закупівлі  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'agreements[0].status'  Отримати статус рамкової угоди  ${field_name}
-    Run Keyword And Return If  '${field_name}' == 'agreements[0].agreementID'  Відкрити детальну інформацію про рамкові угоди
     Run Keyword And Return If  '${field_name}' == 'funders[0].name'  Get Element Attribute  xpath=//span[@data-id='founder-name']/parent::li@data-founder-name
     Run Keyword And Return If  '${field_name}' == 'funders[0].contactPoint.url'  Get Element Attribute  xpath=//span[@data-id='founder-contact-point-email']/parent::li@data-founder-contact-point-url
     Run Keyword And Return If  '${field_name}' == 'enquiryPeriod.clarificationsUntil'  Отримати інформацію з ${field_name}  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'budget.amount'  Convert Amount To Number  ${field_name}
+    Run Keyword If  '${field_name}' == 'agreements[0].agreementID' and 'framework_agreement' in '${scenarios_name}'  Відкрити детальну інформацію про рамкові угоди
 
     Wait Until Element Is Visible  ${tender_data_${field_name}}
     ${result_full}=  Get Text  ${tender_data_${field_name}}
