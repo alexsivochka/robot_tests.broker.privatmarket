@@ -1632,8 +1632,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Visibility And Click Element  xpath=//button[@data-id='setQualStatusActive']
     Sleep  1s
     Wait Until Element Is Visible  xpath=//div[contains(text(),'Ваше рішення поставлено в чергу на відправку в Prozorro')]  ${COMMONWAIT}
-    Підписати ЕЦП  ${index}
-    Sleep  240s
+#    Підписати ЕЦП  ${index}
+    Sleep  120s
 
 
 Відхилити кваліфікацію
