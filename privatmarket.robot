@@ -2113,8 +2113,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword And Return If  'rationaleType' in '${field_name}'  Get Element Attribute  xpath=(//*[@data-id='change'])[1]//p[@data-id='rationale-type']@data-rationale-type
     Run Keyword And Return If  'rationale' in '${field_name}'  Get Text  xpath=(//*[@data-id='change'])[1]//div[@data-id='change-rationale']
     Run Keyword And Return If  'status' in '${field_name}'  Get Element Attribute  xpath=(//*[@data-id='change'])[1]//span[@data-id='change-status']@data-change-status
-    Run Keyword And Return If  'modifications[0].itemId' in '${field_name}'  Get Text  xpath=(//*[@data-id='change'])[1]//div[@data-id='change-modification-description']
-    Run Keyword And Return If  'modifications[0].contractId' in '${field_name}'  Get Text  xpath=(//*[@data-id='change'])[1]//p[@data-id='change-supplier']
+    Run Keyword And Return If  'modifications[0].itemId' in '${field_name}'  Get Element Attribute  xpath=(//*[@data-id='change'])[1]//div[@data-id='change-modification-description']@data-item-id
+    Run Keyword And Return If  'modifications[0].contractId' in '${field_name}'  Get Element Attribute  xpath=(//*[@data-id='change'])[1]//div[@data-id='change-modification-description']@data-contract-id
     Run Keyword And Return If  'modifications[0].addend' in '${field_name}'  Get modifications.addend  ${field_name}
     Run Keyword And Return If  'modifications[0].factor' in '${field_name}'  Get modifications.factor  ${field_name}
 
