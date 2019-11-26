@@ -1875,11 +1875,12 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 Підтвердити підписання контракту
     [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
+    ${tender_type}=  Отримати інформацію з procurementMethodType
     Відкрити детальну інформацію про контракт
     Run Keyword If
     ...  'Неможливість' in '${TEST_NAME}'  Wait Until Element Is Visible  css=input[data-id='contract.title']  5s
     ...  ELSE  Wait For Element With Reload  xpath=//input[@data-id='contract.title'] | //div[contains(@class,'contracts')]  1
-    Run Keyword If  '${MODE}' == 'reporting' or '${MODE}' == 'negotiation'
+    Run Keyword If  '${MODE}' == 'reporting' or '${MODE}' == 'negotiation' or 'belowThreshold' in '${tender_type}'
     ...  Run Keywords
     ...  Заповнити поля договору  ${tender_uaid}
     ...  AND  Опублікувати договір  ${tender_uaid}
@@ -2091,6 +2092,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword And Return If  '${field_name}' == 'period.startDate'  Отримати інформацію з contracts.period.startDate  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'period.endDate'  Отримати інформацію з contracts.period.endDate  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'status'  Отримати статус контракту  ${field_name}
+    Run Keyword And Return If  '${field_name}' == 'changes[0].status'  Отримати статус зміни  ${field_name}
 
     Wait Until Element Is Visible  ${contract_data_${field_name}}
     ${result_full}=  Get Text  ${contract_data_${field_name}}
@@ -2144,6 +2146,13 @@ Get modifications.factor
     ...  'Завершено' == '${status_name}'  terminated
     ...  ELSE  ${status_name}
     [Return]  ${status_type}
+
+
+Отримати статус зміни
+    [Arguments]  ${field_name}
+    Wait Until Element Is Visible  xpath=//div[@data-id='change-info']  ${COMMONWAIT}
+    ${status}=  Get Element Attribute  xpath=//div[@data-id='change-info']@data-change-status
+    [Return]  ${status}
 
 
 Get contract rationalTypes
