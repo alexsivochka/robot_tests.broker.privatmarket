@@ -3635,6 +3635,47 @@ Get Item Number
     Sleep  180s
 
 
+Дискваліфікувати постачальника
+    [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+    ${comment}=  create_fake_sentence
+    Wait Until Element Is Visible  xpath=//a[contains(@ng-class, 'lot-parts')]
+    ${class}=  Get Element Attribute  xpath=//a[contains(@ng-class, 'lot-parts')]@class
+    Run Keyword Unless  'checked' in '${class}'  Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
+    ${scenarios_name}=  privatmarket_service.get_scenarios_name
+    ${tender_type}=  Отримати інформацію з procurementMethodType
+
+    Wait For Element With Reload  xpath=//span[@ng-click="act.openAward(b)"]  1
+    Wait Visibility And Click Element  xpath=//span[@ng-click="act.openAward(b)"]
+
+    Wait For Ajax
+    Wait Visibility And Click Element  xpath=//div[@class='files-upload']//select[@class='form-block__select form-block__select_short']//option[2]
+    Sleep  1s
+    Wait Visibility And Click Element  xpath=//div[@class='files-upload']//select[@class='form-block__select ng-scope form-block__select_short']//option[2]
+    Sleep  1s
+    Execute Javascript  document.querySelector(".files-upload input[type='file']").className = "";
+    Sleep  1s
+    Choose File  css=.files-upload input[type='file']  ${document}
+    Sleep  20s
+    Wait Visibility And Click Element  xpath=//button[@data-id='setUnsuccessful']
+    Wait Visibility And Click Element  xpath=//label[@for='chk-dr0']
+    Wait Element Visibility And Input Text  xpath=//*[@data-id='decline-description']  ${comment}
+    Wait Visibility And Click Element  xpath=//button[@data-id='btn-ok']
+    Wait Until Element Is Visible  xpath=//div[contains(text(),'Ваше рішення поставлено в чергу на відправку в Prozorro')]  ${COMMONWAIT}
+    Wait Visibility And Click Element  xpath=//button[@data-id='btn-close']
+    Sleep  20s
+    Reload Page
+    Execute JavaScript    window.scrollTo(${0},${0})
+    Wait Until Element Is Visible  xpath=//a[contains(@ng-class, 'lot-parts')]
+    ${class}=  Get Element Attribute  xpath=//a[contains(@ng-class, 'lot-parts')]@class
+    Run Keyword Unless  'checked' in '${class}'  Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
+    Run Keywords
+    ...  Wait Until Keyword Succeeds  10min  10s  Дочекатися можливості завантажити ЕЦП
+    ...  AND  Завантажити ЕЦП
+    Reload Page
+    Sleep  120s
+
+
+
 Скасування рішення кваліфікаційної комісії
     [Arguments]  ${username}  ${tender_uaid}  ${award_num}
     Reload Page
