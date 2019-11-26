@@ -3661,7 +3661,7 @@ Get Item Number
     Sleep  10s
     Select Window  title=sign worker
     Wait Until Keyword Succeeds  2min  10s  Дочекатися завантаження сторінки підписання ЕЦП
-    Wait Until Element Is Visible  css=#CAsServersSelect  ${COMMONWAIT}
+    Wait Until Element Is Visible  css=#CAsServersSelect  120s
     Wait Visibility And Click Element  xpath=//select[@id='CAsServersSelect']//option[8]
     ${path}=   get_ECP_key  src/robot_tests.broker.privatmarket/11141802_11141802.jks
     Choose File  id=PKeyFileInput  ${path}
