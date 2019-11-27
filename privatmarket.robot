@@ -595,7 +595,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Set Date In Item  ${item_index}  deliveryDate  startDate  ${item.deliveryDate.startDate}
     Set Date In Item  ${item_index}  deliveryDate  endDate  ${item.deliveryDate.endDate}
 
-    Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementUA'
+    #Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementUA'
+    Run Keyword And Ignore Error
     ...  Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[last()]//div[@data-id='item'])[${count}]//input[@data-id='descriptionEn']  ${item.description_en}
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
@@ -734,10 +735,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  ELSE  Set Variable  ''
 
     Run Keyword Unless  ${type} == 'closeFrameworkAgreementSelectionUA'  privatmarket.Пошук плану по ідентифікатору  ${username}  ${ARTIFACT.tender_uaid}
-
     #go to form
     Run Keyword Unless  ${type} == 'closeFrameworkAgreementSelectionUA'  Wait Visibility And Click Element  xpath=//button[contains(@ng-click,'switchToTender')]
-
     #submissionMethodDetails
     ${submissionMethod}  ${mode}=  Run Keyword And Ignore Error  Set Variable  '${tender_data.data.submissionMethodDetails}'
     ${mode}=  Run Keyword If
@@ -761,7 +760,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait For Ajax
     Wait Element Visibility And Input Text  css=input[data-id='procurementName']  ${tender_data.data.title}
     Wait Element Visibility And Input Text  css=textarea[data-id='procurementDescription']  ${tender_data.data.description}
-    Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or 'FrameworkAgreement' in ${type}
+
+    #Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or 'FrameworkAgreement' in ${type}
+    Run Keyword And Ignore Error
     ...  Run Keywords
     ...  Wait Element Visibility And Input Text  css=input[data-id='procurementNameEn']  ${tender_data.data.title_en}
     ...  AND  Wait Element Visibility And Input Text  css=textarea[data-id='procurementDescriptionEn']  ${tender_data.data.description_en}
@@ -787,7 +788,6 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword Unless  ${type} == 'aboveThresholdEU' or ${type} == 'aboveThresholdUA' or ${type} == 'aboveThresholdUA.defense' or ${type} == 'negotiation' or ${type} == 'competitiveDialogueEU' or ${type} == 'competitiveDialogueUA' or ${type} == 'reporting' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA'  Set Enquiry Period  ${tender_data.data.enquiryPeriod.startDate}  ${tender_data.data.enquiryPeriod.endDate}
     Run Keyword If  ${type} == ''  Set Start Tender Period  ${tender_data.data.tenderPeriod.startDate}
     Run Keyword Unless  ${type} == 'negotiation' or ${type} == 'reporting' or ${type} == 'closeFrameworkAgreementSelectionUA'  Set End Tender Period  ${tender_data.data.tenderPeriod.endDate}
-
     #skipAuction
     Run Keyword If  'quick(mode:fast-forward)' in ${mode}  Wait Visibility And Click Element  css=label[data-id='skip_auction']
 
@@ -806,22 +806,21 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
     #contactPoint
     Wait Element Visibility And Input Text  css=[data-id='contactPoint'] input[data-id='fullNameUa']  ${tender_data.data.procuringEntity.contactPoint.name}
-    Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA'
-    ...  Wait Element Visibility And Input Text  css=[data-id='contactPoint'] input[data-id='fullNameEn']  ${tender_data.data.procuringEntity.contactPoint.name_en}
-
+#    Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA'
+    Run Keyword And Ignore Error  Wait Element Visibility And Input Text  css=[data-id='contactPoint'] input[data-id='fullNameEn']  ${tender_data.data.procuringEntity.contactPoint.name_en}
     ${modified_phone}=  Привести номер телефону до відповідного формату  ${tender_data.data.procuringEntity.contactPoint.telephone}
     Wait Element Visibility And Input Text  css=input[data-id='phone']  ${modified_phone}
     Wait Element Visibility And Input Text  css=input[data-id='email']  ${USERS.users['${username}'].email}
     Wait Element Visibility And Input Text  css=input[data-id='url']  ${tender_data.data.procuringEntity.contactPoint.url}
 
-    Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA'
+#    Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA'
+    Run Keyword And Ignore Error
     ...  Run Keywords
     ...  Wait Element Visibility And Input Text  css=[data-id='addContactPoint'] input[data-id='fullNameUa']  ${tender_data.data.procuringEntity.contactPoint.name}
-    ...  AND  Wait Element Visibility And Input Text  css=[data-id='addContactPoint'] input[data-id='fullNameEn']  ${tender_data.data.procuringEntity.contactPoint.name_en}
     ...  AND  Wait Element Visibility And Input Text  css=[data-id='addContactPoint'] input[data-id='phone']  ${modified_phone}
     ...  AND  Wait Element Visibility And Input Text  css=[data-id='addContactPoint'] input[data-id='email']  ${USERS.users['${username}'].email}
+    ...  AND  Wait Element Visibility And Input Text  css=[data-id='addContactPoint'] input[data-id='fullNameEn']  ${tender_data.data.procuringEntity.contactPoint.name_en}
     ...  AND  Wait Element Visibility And Input Text  css=input[data-id='legalNameEn']  ${tender_data.data.procuringEntity.name_en}
-
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
 
     ${lots_count}=  Run Keyword Unless  ${type} == 'reporting'  Get Length  ${lots}
@@ -902,7 +901,6 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     [Arguments]  ${lots}  ${items}  ${type}
     ${lots_count}=  Get Length  ${lots}
     Wait For Ajax
-
     : FOR  ${index}  IN RANGE  0  ${lots_count}
     \  ${lot_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Run Keyword IF  ${type} == 'esco' and '${lot_index}' == '1'  Wait Visibility And Click Element  css=#lot_choosed~label
@@ -920,7 +918,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  Run Keyword Unless  ${type} == 'negotiation' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementSelectionUA'
     \  ...  Wait Visibility And Click Element  xpath=(//label[contains(@for,'guarantee')])[${lot_index}]
     \  Run Keyword Unless  ${type} == 'negotiation' or ${type} == 'esco' or ${type} == 'closeFrameworkAgreementSelectionUA'  Wait Element Visibility And Input Text  xpath=(//input[@data-id='guaranteeAmount'])[${lot_index}]  1
-    \  Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+  #  \ Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    \  Run Keyword And Ignore Error
     \  ...  Run Keywords
     \  ...  Wait Element Visibility And Input Text  xpath=(//input[@data-id='procurementNameEn'])[${lot_index}]  ${lots[${index}].title_en}
     \  ...  AND  Wait Element Visibility And Input Text  xpath=(//textarea[@data-id='lotDescriptionEn'])[${lot_index}]  ${lots[${index}].description}
@@ -1012,7 +1011,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  Set Date In Item  ${abs_item_index}  deliveryDate  startDate  ${items[${index}].deliveryDate.startDate}
     ...  AND  Set Date In Item  ${abs_item_index}  deliveryDate  endDate  ${items[${index}].deliveryDate.endDate}
 
-    Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'esco'
+   # Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'esco'
+   Run Keyword And Ignore Error
     ...  Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='descriptionEn']  ${items[${index}].description_en}
 
 
@@ -1087,9 +1087,11 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  Wait Visibility And Click Element  xpath=//section[@data-id='ptrFeatures']//button[@data-id='actAdd']
     ...  AND  Wait Visibility And Click Element  xpath=(//section[@data-id='ptrFeatures']//button[@data-id='actRemove'])[1]
     Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] [data-id='title']  ${features.title}
-    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'  Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] [data-id='titleEn']  ${features.title_en}
+    #Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    Run Keyword And Ignore Error  Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] [data-id='titleEn']  ${features.title_en}
     Wait Element Visibility And Input Text  css=textarea[data-id='description']  ${features.description}
-    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'  Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] textarea[data-id='descriptionEn']  ${features.description}
+#    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    Run Keyword And Ignore Error  Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] textarea[data-id='descriptionEn']  ${features.description}
 
     @{tender_enums}=  Get From Dictionary  ${features}  enum
     ${tender_criterion_count}=  Get Length  ${tender_enums}
@@ -1101,7 +1103,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//input[@data-id='criterionValue'])[${elem_index}]  ${tender_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//input[@data-id='criterionTitle'])[${elem_index}]  ${tender_enums[${index}].title}
-    \  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+   # \  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+      \  Run Keyword And Ignore Error
     \  ...  Wait Element Visibility And Input Text  xpath=(//section[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${tender_enums[${index}].title}
 
 
@@ -1111,10 +1114,12 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Visibility And Click Element  css=label[for='features_items_yes']
     Wait Visibility And Click Element  css=[data-id='item'] button[data-id='actAdd']
     Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='title']  ${features.title}
-    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    #Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    Run Keyword And Ignore Error
     ...  Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='titleEn']  ${features.title_en}
     Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='description']  ${features.description}
-    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+ #  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    Run Keyword And Ignore Error
     ...  Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='descriptionEn']  ${features.description}
 
     @{item_enums}=  Get From Dictionary  ${features}  enum
@@ -1128,7 +1133,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionValue'])[${elem_index}]  ${item_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitle'])[${elem_index}]  ${item_enums[${index}].title}
-    \  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    #\  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    \  Run Keyword And Ignore Error
     \  ...  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${item_enums[${index}].title}
 
 
@@ -1138,10 +1144,12 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Visibility And Click Element  css=label[for='features_lots_yes']
     Wait Visibility And Click Element  css=[data-id='lot'] button[data-id='actAdd']
     Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='title']  ${features.title}
-    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    #Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    Run Keyword And Ignore Error
     ...  Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='titleEn']  ${features.title_en}
     Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='description']  ${features.description}
-    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+#    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    Run Keyword And Ignore Error
     ...  Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='descriptionEn']  ${features.description}
 
     @{lot_enums}=  Get From Dictionary  ${features}  enum
@@ -1154,7 +1162,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionValue'])[${elem_index}]  ${lot_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitle'])[${elem_index}]  ${lot_enums[${index}].title}
-    \  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+  #  \  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
+    \  Run Keyword And Ignore Error
     \  ...  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${lot_enums[${index}].title}
 
 
@@ -1323,7 +1332,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='title'])[last()]  ${feature.title}
     Run Keyword If  ${type} != 'aboveThresholdUA'  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='titleEn'])[last()]  ${feature.title_en}
     Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//textarea[@data-id='description'])[last()]  ${feature.description}
-    Run Keyword If  ${type} != 'aboveThresholdUA'  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//textarea[@data-id='descriptionEn'])[last()]  ${feature.description}
+ #   Run Keyword If  ${type} != 'aboveThresholdUA'
+    Run Keyword And Ignore Error  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//textarea[@data-id='descriptionEn'])[last()]  ${feature.description}
 
     @{tender_enums}=  Get From Dictionary  ${feature}  enum
     ${tender_criterion_count}=  Get Length  ${tender_enums}
@@ -1335,7 +1345,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionValue'])[last()]  ${tender_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionTitle'])[last()]  ${tender_enums[${index}].title}
-    \  Run Keyword If  ${type} != 'aboveThresholdUA'  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[last()]  ${tender_enums[${index}].title}
+   # \  Run Keyword If  ${type} != 'aboveThresholdUA'
+    \  Run Keyword And Ignore Error
+    \ Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[last()]  ${tender_enums[${index}].title}
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
@@ -1374,7 +1386,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionValue'])[last()]  ${lot_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitle'])[last()]  ${lot_enums[${index}].title}
-    \  Run Keyword If  ${type} != 'aboveThresholdUA'  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[last()]  ${lot_enums[${index}].title}
+   # \  Run Keyword If  ${type} != 'aboveThresholdUA'
+    \  Run Keyword And Ignore Error
+    \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[last()]  ${lot_enums[${index}].title}
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
@@ -1401,7 +1415,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='title'])[last()]  ${feature.title}
     Run Keyword If  ${type} != 'aboveThresholdUA'  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='titleEn'])[last()]  ${feature.title}
     Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//textarea[@data-id='description'])[last()]  ${feature.description}
-    Run Keyword If  ${type} != 'aboveThresholdUA'  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//textarea[@data-id='descriptionEn'])[last()]  ${feature.description}
+  #  Run Keyword If  ${type} != 'aboveThresholdUA'
+    Run Keyword And Ignore Error  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//textarea[@data-id='descriptionEn'])[last()]  ${feature.description}
 
     @{item_enums}=  Get From Dictionary  ${feature}  enum
     ${item_criterion_count}=  Get Length  ${item_enums}
@@ -1413,7 +1428,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionValue'])[last()]  ${item_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitle'])[last()]  ${item_enums[${index}].title}
-    \  Run Keyword If  ${type} != 'aboveThresholdUA'  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[last()]  ${item_enums[${index}].title}
+   # \  Run Keyword If  ${type} != 'aboveThresholdUA'
+    \  Run Keyword And Ignore Error  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[last()]  ${item_enums[${index}].title}
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
