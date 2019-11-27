@@ -3438,6 +3438,7 @@ Try Search Element
     ...  ELSE IF  '${tab_number}' == '1' and 'підтвердити постачальника до переговорної процедури' in '${TEST_NAME}'  Відкрити детальну інформацію про постачальника
     ...  ELSE IF  '${tab_number}' == '1' and 'підтвердити постачальника' in '${TEST_NAME}'  Відкрити детальну інформацію про постачальника
     ...  ELSE IF  '${tab_number}' == '1' and 'підтвердити учасника' in '${TEST_NAME}'  Відкрити детальну інформацію про постачальника
+    ...  ELSE IF  '${tab_number}' == '1' and 'відхилити постачальника' in '${TEST_NAME}'  Відкрити детальну інформацію про постачальника
     ...  ELSE IF  '${tab_number}' == '1' and 'договору' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and 'обсягу дійсно оплаченої суми' in '${TEST_NAME}'  Відкрити детальну інформацію про контракт
     ...  ELSE IF  '${tab_number}' == '1' and 'статусу зареєстрованої угоди' in '${TEST_NAME}'  Відкрити детальну інформацію про рамкові угоди
@@ -3638,6 +3639,7 @@ Get Item Number
 Дискваліфікувати постачальника
     [Arguments]  ${username}  ${tender_uaid}  ${award_num}
     ${comment}=  create_fake_sentence
+    ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
     Wait Until Element Is Visible  xpath=//a[contains(@ng-class, 'lot-parts')]
     ${class}=  Get Element Attribute  xpath=//a[contains(@ng-class, 'lot-parts')]@class
     Run Keyword Unless  'checked' in '${class}'  Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
@@ -3654,7 +3656,7 @@ Get Item Number
     Sleep  1s
     Execute Javascript  document.querySelector(".files-upload input[type='file']").className = "";
     Sleep  1s
-    Choose File  css=.files-upload input[type='file']  ${document}
+    Choose File  css=.files-upload input[type='file']  ${file_path}
     Sleep  20s
     Wait Visibility And Click Element  xpath=//button[@data-id='setUnsuccessful']
     Wait Visibility And Click Element  xpath=//label[@for='chk-dr0']
