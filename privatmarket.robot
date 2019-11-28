@@ -925,8 +925,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
   #  \ Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
     \  Run Keyword And Ignore Error
     \  ...  Run Keywords
-    \  ...  Wait Element Visibility And Input Text  xpath=(//input[@data-id='procurementNameEn'])[${lot_index}]  ${lots[${index}].title_en}
-    \  ...  AND  Wait Element Visibility And Input Text  xpath=(//textarea[@data-id='lotDescriptionEn'])[${lot_index}]  ${lots[${index}].description}
+    \  ...  Wait Until Element Is Visible  xpath=(//input[@data-id='procurementNameEn'])[${lot_index}]  5s
+    \  ...  AND  Input Text  xpath=(//input[@data-id='procurementNameEn'])[${lot_index}]  ${lots[${index}].title_en}
+    \  ...  AND  Wait Until Element Is Visible  xpath=(//textarea[@data-id='lotDescriptionEn'])[${lot_index}]  5s
+    \  ...  AND  Input Text  xpath=(//textarea[@data-id='lotDescriptionEn'])[${lot_index}]  ${lots[${index}].description}
     \  ${auction_step}=  Set Variable If  ${type} == 'esco'  ${lots[${index}].minimalStepPercentage}  ''
     \  ${auction_step}=  Run Keyword IF  ${type} == 'esco'  Привести до відсотків  ${auction_step}
     \  ${yearly_payments}=  Set Variable If  ${type} == 'esco'  ${lots[${index}].yearlyPaymentsPercentageRange}  ''
@@ -1017,7 +1019,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
    # Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'esco'
    Run Keyword And Ignore Error
-    ...  Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='descriptionEn']  ${items[${index}].description_en}
+   ...  Run Keywords
+   ...  Wait Until Element Is Visible  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='descriptionEn']  5s
+   ...  AND  Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='descriptionEn']  ${items[${index}].description_en}
 
 
 Отримати період для номенклатури
@@ -1096,10 +1100,16 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  AND  Wait Visibility And Click Element  xpath=(//section[@data-id='ptrFeatures']//button[@data-id='actRemove'])[1]
     Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] [data-id='title']  ${features.title}
     #Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
-    Run Keyword And Ignore Error  Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] [data-id='titleEn']  ${features.title_en}
+    Run Keyword And Ignore Error
+    ...  Run Keywords
+    ...  Wait Until Element Is Visible  css=[data-id='ptrFeatures'] [data-id='titleEn']  5s
+    ...  AND  Input Text  css=[data-id='ptrFeatures'] [data-id='titleEn']  ${features.title_en}
     Wait Element Visibility And Input Text  css=textarea[data-id='description']  ${features.description}
 #    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
-    Run Keyword And Ignore Error  Wait Element Visibility And Input Text  css=[data-id='ptrFeatures'] textarea[data-id='descriptionEn']  ${features.description}
+    Run Keyword And Ignore Error
+    ...  Run Keywords
+    ...  Wait Until Element Is Visible  css=[data-id='ptrFeatures'] textarea[data-id='descriptionEn']  5s
+    ...  AND  Input Text  css=[data-id='ptrFeatures'] textarea[data-id='descriptionEn']  ${features.description}
 
     @{tender_enums}=  Get From Dictionary  ${features}  enum
     ${tender_criterion_count}=  Get Length  ${tender_enums}
@@ -1112,8 +1122,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  Wait Element Visibility And Input Text  xpath=(//input[@data-id='criterionValue'])[${elem_index}]  ${tender_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//input[@data-id='criterionTitle'])[${elem_index}]  ${tender_enums[${index}].title}
    # \  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
-      \  Run Keyword And Ignore Error
-    \  ...  Wait Element Visibility And Input Text  xpath=(//section[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${tender_enums[${index}].title}
+    \  Run Keyword And Ignore Error
+    \  ...  Run Keywords
+    \  ...  Wait Until Element Is Visible  xpath=(//section[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[${elem_index}]  5s
+    \  ...  AND  Input Text  xpath=(//section[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${tender_enums[${index}].title}
 
 
 Заповнити нецінові показники по предмету
@@ -1124,11 +1136,15 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='title']  ${features.title}
     #Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
     Run Keyword And Ignore Error
-    ...  Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='titleEn']  ${features.title_en}
+    ...  Run Keywords
+    ...  Wait Until Element Is Visible  css=[data-id='item'] [data-id='titleEn']  5s
+    ...  AND  Input Text  css=[data-id='item'] [data-id='titleEn']  ${features.title_en}
     Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='description']  ${features.description}
  #  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
     Run Keyword And Ignore Error
-    ...  Wait Element Visibility And Input Text  css=[data-id='item'] [data-id='descriptionEn']  ${features.description}
+    ...  Run Keywords
+    ...  Wait Until Element Is Visible  css=[data-id='item'] [data-id='descriptionEn']  5s
+    ...  AND  Input Text  css=[data-id='item'] [data-id='descriptionEn']  ${features.description}
 
     @{item_enums}=  Get From Dictionary  ${features}  enum
     ${item_criterion_count}=  Get Length  ${item_enums}
@@ -1143,7 +1159,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitle'])[${elem_index}]  ${item_enums[${index}].title}
     #\  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
     \  Run Keyword And Ignore Error
-    \  ...  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${item_enums[${index}].title}
+    \  ...  Run Keywords
+    \  ...  Wait Until Element Is Visible  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[${elem_index}]  5s
+    \  ...  AND  Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${item_enums[${index}].title}
 
 
 Заповнити нецінові показники по лоту
@@ -1154,11 +1172,15 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='title']  ${features.title}
     #Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
     Run Keyword And Ignore Error
-    ...  Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='titleEn']  ${features.title_en}
+    ...  Run Keywords
+    ...  Wait Until Element Is Visible  css=[data-id='lot'] [data-id='titleEn']  5s
+    ...  AND  Input Text  css=[data-id='lot'] [data-id='titleEn']  ${features.title_en}
     Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='description']  ${features.description}
 #    Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
     Run Keyword And Ignore Error
-    ...  Wait Element Visibility And Input Text  css=[data-id='lot'] [data-id='descriptionEn']  ${features.description}
+    ...  Run Keywords
+    ...  Wait Until Element Is Visible  css=[data-id='lot'] [data-id='descriptionEn']  5s
+    ...  AND  Input Text  css=[data-id='lot'] [data-id='descriptionEn']  ${features.description}
 
     @{lot_enums}=  Get From Dictionary  ${features}  enum
     ${lot_criterion_count}=  Get Length  ${lot_enums}
@@ -1172,7 +1194,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitle'])[${elem_index}]  ${lot_enums[${index}].title}
   #  \  Run Keyword If  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'closeFrameworkAgreementUA' or ${type} == 'esco'
     \  Run Keyword And Ignore Error
-    \  ...  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${lot_enums[${index}].title}
+    \  ...  Run Keywords
+    \  ...  Wait Until Element Is Visible  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[${elem_index}]  5s
+    \  ...  AND  Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[${elem_index}]  ${lot_enums[${index}].title}
 
 
 Заповнити срок дії рамкової угоди
