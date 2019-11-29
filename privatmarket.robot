@@ -3814,6 +3814,8 @@ Get Item Number
     ${class}=  Get Element Attribute  xpath=//a[contains(@ng-class, 'lot-parts')]@class
     Run Keyword Unless  'checked' in '${class}'  Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
     Wait Visibility And Click Element  xpath=(//img[contains(@ng-src,'icon-plus')])[last()]
+    sleep  10s
+    Wait Visibility And Click Element  xpath=//a[contains(text(),'Очікує ЕЦП')]/following-sibling::span
 #    Wait Visibility And Click Element  xpath=//div[contains(text(),'Пiдпис замовника')]/following-sibling::div[@data-id='no-ecp']
     Wait Visibility And Click Element  xpath=//button[@data-id='addAwardFileEcp']
 
