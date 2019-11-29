@@ -266,6 +266,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ${education_type}=  Run Keyword If  'negotiation' in '${suite_name}'  Set Variable  False
     ...  ELSE  Set Variable  True
 
+    ${tender_id2}=  Remove String Using Regexp  ${tender_id}  \\.\\d$
+    ${tender_id}=  Set Variable If  'тендер другого етапу' in '${TEST_NAME}'  ${tender_id2}  ${tender_id}
+
     Wait For Tender  ${tenderId}  ${education_type}
     Wait Visibility And Click Element  xpath=//a[@id='${tenderId}']
     Sleep  5s
@@ -3465,8 +3468,6 @@ Wait For Tender
 Try Search Tender
     [Arguments]  ${tender_id}  ${education_type}  ${type}
     Check Current Mode New Realisation
-    ${tender_id2}=  Remove String Using Regexp  ${tender_id}  \\.\\d$
-    ${tender_id}=  Set Variable If  'тендер другого етапу' in '${TEST_NAME}'  ${tender_id2}  ${tender_id}
     #заполним поле поиска
     Clear Element Text  ${locator_tenderSearch.searchInput}
     Sleep  1s
@@ -3700,7 +3701,8 @@ Get Item Number
 Дочекатися можливості завантажити документ рішення кваліфікаційної комісії
     Reload Page
     Wait Visibility And Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
-    Wait Visibility And Click Element  xpath=//div[@class='lot-info ng-scope' and contains(.,'Кваліфікація учасників') ]//table[@class='bids']//a[@class='ng-binding']
+#    Wait Visibility And Click Element  xpath=//div[@class='lot-info ng-scope' and contains(.,'Кваліфікація учасників') ]//table[@class='bids']//a[@class='ng-binding']
+    Wait Visibility And Click Element  xpath=//span[contains(text(),'Розглядається')]/following-sibling::span[@ng-click='act.openAward(b)']
     Wait Until Element Is Visible  xpath=//div[@class='files-upload']
 
 
@@ -4464,7 +4466,7 @@ Get Item Number
 Внести зміну в договір
     [Arguments]  ${username}  ${contract_uaid}  ${change_data}
     privatmarket.Пошук договору по ідентифікатору  ${username}  ${contract_uaid}
-#    Wait Visibility And Click Element  xpath=//button[@ng-click='act.toChange()']
+    Wait Visibility And Click Element  xpath=//button[@ng-click='act.toChange()']
     Wait Until Element Is Visible  css=div.change
     Wait Element Visibility And Input Text  xpath=//textarea[@data-id='rationale']  ${change_data.data.rationale}
     Wait Visibility And Click Element  xpath=//a[@ng-click='act.setRationale()']
@@ -4513,12 +4515,17 @@ Get Item Number
 
 Редагувати поле договору
     [Arguments]  ${username}  ${contract_uaid}  ${field_name}  ${value}
-    Fail  Ключевое слово не реализовано
+    Reload Page
+    Wait Visibility And Click Element  xpath=//a[contains(@ng-class, 'lot-cont')]
+    Wait Visibility And Click Element  xpath=//button[@ng-click='act.toChange()']
+    Run Keyword If  '${field_name}' == 'description'  Wait Element Visibility And Input Text  css=textarea[data-id='procurementDescription']  ${value}
 
 
 Редагувати зміну
     [Arguments]  ${username}  ${contract_uaid}  ${field_name}  ${value}
-    Fail  Ключевое слово не реализовано
+    Reload Page
+    Wait Visibility And Click Element  xpath=//a[contains(@ng-class, 'lot-cont')]
+    Wait Visibility And Click Element  xpath=//button[@ng-click='act.toChange()']
 
 
 Застосувати зміну
@@ -4539,6 +4546,13 @@ Get Item Number
 Завершити договір
     [Arguments]  ${username}  ${contract_uaid}
     Fail  Ключевое слово не реализовано
+
+
+Затвердити постачальників
+    [Arguments]  ${username}  ${tender_uaid}
+    Wait For Element With Reload  xpath=//button[@data-id='finishQualBtn']  1
+    Wait Visibility And Click Element  xpath=//button[@data-id='finishQualBtn']
+    sleep  60s
 
 
 Встановити ціну за одиницю для контракту
@@ -4574,7 +4588,11 @@ Get Item Number
     Wait Element Visibility And Input Text  xpath=//input[@name='agreementTitle']  ${tender_uaid}
     Wait Element Visibility And Input Text  xpath=//input[@name='agreementNumber']  ${tender_uaid}
 
-
+    ${startDate}=  privatmarket_service.convert_date_to_format  ${period.startDate}
+    ${endDate}=  privatmarket_service.convert_date_to_format  ${period.endDate}
+    Wait Element Visibility And Input Text  xpath=//input[contains(@data-id,'dateSigned')]  ${startDate}
+    Wait Element Visibility And Input Text  xpath=//input[contains(@data-id,'Start')]  ${startDate}
+    Wait Element Visibility And Input Text  xpath=//input[contains(@data-id,'End')]  ${endDate}
 
     ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
     Wait For Ajax
@@ -4586,18 +4604,3 @@ Get Item Number
     Sleep  1s
     Choose File  css=input[data-id='input-file']  ${file_path}
     Sleep  20s
-
-
-#    //select[@data-id='filetype']/option[6]
-
-#Run As  ${tender_owner}  Зареєструвати угоду  ${TENDER['TENDER_UAID']}  ${period}
-
-#${amount}=  convert_float_to_string  ${tender_data.data.budget.amount}
-#
-#    Run Keyword Unless  '${MODE}' == 'esco'  Input Text  xpath=//input[@data-id='valueAmount']  ${amount}
-#
-#https://zakupivli24.pb.ua/prz-stage/tender/UA-2019-11-28-000022-c#/info
-#
-#Set To Dictionary  ${contract_data.data.unitPrices[${index}].value}  amount=${value}
-#
-#232712
