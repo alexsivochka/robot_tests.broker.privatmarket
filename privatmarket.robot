@@ -950,6 +950,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     [Arguments]  ${items}  ${lot_index}  ${lot_id}  ${type}
     ${lot_items}=  privatmarket_service.get_items_from_lot  ${items}  ${lot_id}
     ${items_count}=  Get Length  ${lot_items}
+    ${item_plans_count}=  Get Matching Xpath Count  xpath=//div[@data-id='item']
+    ${diff}=  evaluate  ${item_plans_count}-${items_count}
+    : FOR  ${index}  IN RANGE  0  ${diff}
+    \  Wait Visibility And Click Element  xpath=(//button[@data-id='actRemove'])[last()]
     Wait For Ajax
     : FOR  ${index}  IN RANGE  0  ${items_count}
     \  Додати item до лоту  ${lot_items}  ${items_count}  ${lot_index}  ${index}  ${type}
@@ -3445,7 +3449,7 @@ Login
     ...  Wait Visibility And Click Element  css=section.offer-acceptation label>span
     ...  AND  Wait Visibility And Click Element  css=button.btn-primary
 
-    Wait Until Element Is Visible  css=.company-name  timeout=30
+    Wait Until Element Is Visible  css=.company-name  timeout=60
 
 
 Wait Visibility And Click Element
@@ -4434,13 +4438,22 @@ Get Item Number
 Активувати другий етап
     [Arguments]  ${username}  ${tender_uaid}
     Log  ${tender_uaid}
-    privatmarket.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+#    privatmarket.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
     Wait Visibility And Click Element  xpath=//button[@data-id='editProcBtn']
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']    # unexpected behavior
     Wait Visibility And Click Element  ${locator_tenderadd.btnsave}
+    sleep  5s
+    Wait Until Element Is Visible  xpath=//span[@title='Лоти та предмети закупівлі']  ${COMMONWAIT}
     Wait Visibility And Click Element  ${locator_tenderadd.btnsave}
+    sleep  5s
+    Wait Until Element Is Visible  xpath=//span[@title='Нецінові показники']  ${COMMONWAIT}
     Wait Visibility And Click Element  ${locator_tenderadd.btnsave}
+    sleep  5s
+    Wait Until Element Is Visible  xpath=//span[@title='Документація']  ${COMMONWAIT}
     Wait Visibility And Click Element  ${locator_tenderadd.btnsave}
+    sleep  5s
+    Wait Until Element Is Visible  xpath=//span[@title='Перевірка та публікація']  ${COMMONWAIT}
+    sleep  5s
     Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
     Close Confirmation In Editor  Закупівля поставлена в чергу на відправку в ProZorro. Статус закупівлі Ви можете відстежувати в особистому кабінеті.
     Run Keyword IF  '${MODE}' == 'open_competitive_dialogue'  Wait For Element With Reload  css=[data-tender-status='active.tendering']  1
@@ -4553,17 +4566,23 @@ Get Item Number
 Затвердити постачальників
     [Arguments]  ${username}  ${tender_uaid}
     Wait For Element With Reload  xpath=//button[@data-id='finishQualBtn']  1
+    Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//button[@data-id='finishQualBtn']
-    sleep  60s
+    sleep  15s
 
 
 Встановити ціну за одиницю для контракту
     [Arguments]  ${username}  ${tender_uaid}  ${contract_data}
-    ${value}=  convert_float_to_string  ${contract_data.data.budget.amount}
+    ${award_index}=  Set Variable If
+    ...  'ціну за одиницю для першого контракту' in '${TEST_NAME}'  0
+    ...  'ціну за одиницю для другого контракту' in '${TEST_NAME}'  1
+    ...  'ціну за одиницю для третього контракту' in '${TEST_NAME}'  2
     ${index}=  Set Variable If
     ...  'ціну за одиницю для першого контракту' in '${TEST_NAME}'  1
     ...  'ціну за одиницю для другого контракту' in '${TEST_NAME}'  2
     ...  'ціну за одиницю для третього контракту' in '${TEST_NAME}'  3
+
+    ${value}=  convert_float_to_string  ${contract_data.data.unitPrices[${award_index}].value.amount}
 
     Wait Until Keyword Succeeds  15min  30s  Дочекатися можливості завантажити рамкову угоду
     Wait Visibility And Click Element  xpath=(//div[@class='agreement-flex-table-item']//button)[${index}]
@@ -4572,7 +4591,7 @@ Get Item Number
 
     :FOR  ${i}  In Range  0  ${count}
     \  ${xpath_index}=  Evaluate  ${i}+1
-    \  Wait Element Visibility And Input Text  xpath=((//div[contains(@class,'agreement-flex-table-item-body')])[${index}]//input[contains(@name,'unit_price')])[${xpath_index}]  ${contract_data.data.unitPrices[${i}].value.amount}
+    \  Wait Element Visibility And Input Text  xpath=((//div[contains(@class,'agreement-flex-table-item-body')])[${index}]//input[contains(@name,'unit_price')])[${xpath_index}]  ${contract_data.data.unitPrices[0].value.amount}
 
     Wait Visibility And Click Element  xpath=//button[contains(text(),'Зберігти зміни')]
     Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
