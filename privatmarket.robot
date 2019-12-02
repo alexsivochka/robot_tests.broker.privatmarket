@@ -267,11 +267,13 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  ELSE  Set Variable  True
 
     ${tender_id2}=  Remove String Using Regexp  ${tender_id}  \\.\\d$
-    ${tender_id}=  Set Variable If  'тендер другого етапу' in '${TEST_NAME}'  ${tender_id2}  ${tender_id}
+    ${tender_id}=  Set Variable If  'тендер другого етапу' in '${TEST_NAME}' or 'на другому етапі' in '${TEST_NAME}'  ${tender_id2}  ${tender_id}
 
     Wait For Tender  ${tenderId}  ${education_type}
     Wait Visibility And Click Element  xpath=//a[@id='${tenderId}']
     Sleep  5s
+    Run Keyword If  'тендер другого етапу' in '${TEST_NAME}' or 'на другому етапі' in '${TEST_NAME}'
+    ...  Wait Visibility And Click Element  xpath=//a[@ng-click='act.move2NextStage()']
     Wait Until Element Is Visible  ${tender_data_title}  ${COMMONWAIT}
     Log To Console  ${tenderId}
 
