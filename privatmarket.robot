@@ -4680,9 +4680,22 @@ Get Item Number
     ...  AND  Wait Visibility And Click Element  xpath=//button[contains(@ng-click,'confirmPriceChanges')]
     ...  AND  Wait Visibility And Click Element  xpath=//select[@data-id='rationale-type-select']/option[@value='string:${rationaleType}']
     ...  AND  Wait Element Visibility And Input Text  xpath=//input[@name='rationale']  ${change_data.data.rationale}
+    ...  AND  Run Keyword If  'taxRate' in '${TEST_NAME}'  Wait Visibility And Click Element  xpath=//label[@for='priceValue0']
     ...  AND  Run Keyword If  'taxRate' in '${TEST_NAME}'  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-addend-input']  1
-    ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}'  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-factor-input']  1
+    ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Clear Element Text  xpath=//input[@data-id='modification-factor-input']
+    ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-factor-input']  1.01
     ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='review-changes']
+
+    Run Keyword If  '${rationaleType}' == 'partyWithdrawal'
+    ...  Run Keywords
+    ...  Wait Visibility And Click Element  xpath=//div[contains(@class,'agreements')]//span[text()='Сторони рамкової угоди']
+    ...  AND  Wait Visibility And Click Element  xpath=//button[contains(@ng-click,'partyWithdrawalEdit')]
+    ...  AND  Wait Visibility And Click Element  xpath=(//*[@data-id='party-withdrawal']//label[contains(@class,'switch')])[1]
+    ...  AND  Wait Visibility And Click Element  xpath=//button[contains(@ng-click,'confirmPartyWithdrawalChanges')]
+    ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='modalOkBtn']
+    ...  AND  Wait Element Visibility And Input Text  xpath=//input[@name='rationale']  ${change_data.data.rationale}
+    ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='save-agreement-change-draft']
+    ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
     sleep  30s
 
 
@@ -4695,6 +4708,8 @@ Get Item Number
     ${field_value}=  Run Keyword  privatmarket_service.get_change_field_value  ${change_data.data.modifications[0]}
     ${field_value}=  Convert To String  ${field_value}
 
+    Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Clear Element Text  xpath=//input[@data-id='modification-factor-input']
+
     Run Keyword If  '${field_name}' == 'addend'
     ...  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-addend-input']  ${field_value}
     Run Keyword If  '${field_name}' == 'factor'
@@ -4702,7 +4717,6 @@ Get Item Number
 
     Wait Visibility And Click Element  xpath=//button[@data-id='review-changes']
     sleep  30s
-
 
 
 Завантажити документ для зміни у рамковій угоді
@@ -4731,13 +4745,14 @@ Get Item Number
     ${signed}=  privatmarket_service.convert_date_to_format  ${dateSigned}  %d-%m-%Y %H:%M
     Wait Element Visibility And Input Text  xpath=//input[contains(@data-id,'dateSigned')]  ${signed}
 
+    Run Keyword If  '${status}' == 'cancelled'
+    ...  Run Keywords
+    ...  Wait Visibility And Click Element  xpath=//button[@data-id='cancel-agreement-changes']
+    ...  AND  Wait Visibility And Click Element  xpath=//*[@data-id='modalOkBtn']
+
     Run Keyword If  '${status}' == 'active'
     ...  Wait Visibility And Click Element  xpath=//button[@data-id='activete-agreement-changes']
-
-#    Run Keyword If  '${status}' == 'cancelled'
-#    ...  Wait Visibility And Click Element  xpath=//button[@data-id='activete-agreement-changes'] *********************
-#    sleep  30s
-
+    sleep  30s
 
 
 #Дочекатись можливості зареєструвати угоди
