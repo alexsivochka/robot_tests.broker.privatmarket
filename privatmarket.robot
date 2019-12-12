@@ -4140,7 +4140,8 @@ Get Item Number
     Wait Element Visibility And Input Text  xpath=//input[@data-id='email']   ${bid.data.tenderers[0].contactPoint.email}
 
     Wait Visibility And Click Element  xpath=//button[@data-id='save-bid-btn']
-    Wait Visibility And Click Element  xpath=//button[contains(@class,'payment-submit')]
+    Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
+    Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Sleep  1s
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
     Sleep  60s
@@ -4302,7 +4303,7 @@ Get Item Number
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modalOkBtn']
     Wait Visibility And Click Element  css=button[data-id='save-bid-btn']
     Wait For Ajax
-    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    Run Keyword Unless  'framework_selection' in '${scenarios_name}'
     ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
@@ -4675,9 +4676,9 @@ Get Item Number
 #  ${contract_data}=  munch_dict  arg=${contract_data}
 #  Log  ${contract_data}
 #  [Return]  ${contract_data}
-
-
-
+#
+#
+#
 #Підготувати дані для оновлення властивості угоди
 #  [Arguments]  ${username}  ${field_name}  ${field_value}
 #  ${username}=  Отримати користувача з доступом до поля за пріорітетом  items  ${tender_owner}  ${viewer}
