@@ -2353,7 +2353,7 @@ Wait For Tender Status
     ...  'відповіді на запитання на всі предмети' in '${TEST_NAME}'  по позиції
     ...  'відповіді на запитання на тендер' in '${TEST_NAME}'  по закупівлі
 
-    ${current_xpath}=  set variable   xpath=(//div[contains(text() , '${text_for_xpath}')]/../..//div[@class='question-div'])[2]
+    ${current_xpath}=  set variable   xpath=(//div[contains(text() , '${text_for_xpath}')]/../..//div[contains(@class,'question-div')])[2]
 
      Run Keyword If
     ...  'запитання на тендер' in '${TEST_NAME}'  Wait For Element With Reload  ${current_xpath}  2
