@@ -4220,7 +4220,7 @@ Get Item Number
     Wait For Ajax
     Click Button  css=button[data-id='save-bid-btn']
     Sleep  10s
-    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    Run Keyword Unless  'framework_selection' in '${scenarios_name}'
     ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
@@ -4246,7 +4246,7 @@ Get Item Number
     Wait For Ajax
     Click Button  css=button[data-id='save-bid-btn']
     Wait For Ajax
-    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    Run Keyword Unless  'framework_selection' in '${scenarios_name}'
     ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
@@ -4274,7 +4274,7 @@ Get Item Number
     Wait For Ajax
     Wait Visibility And Click Element  css=button[data-id='save-bid-btn']
     Sleep  1s
-    Run Keyword Unless  '${mode}' == 'open_esco' or 'framework_selection' in '${scenarios_name}'
+    Run Keyword Unless  'framework_selection' in '${scenarios_name}'
     ...  Wait Visibility And Click Element  xpath=//span[contains(text(),'автоматично')]
     Wait Visibility And Click Element  xpath=//button[contains(@class,'submit')]
     Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
