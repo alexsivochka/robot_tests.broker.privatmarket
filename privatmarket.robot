@@ -957,8 +957,13 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     [Arguments]  ${items}  ${items_count}  ${lot_index}  ${index}  ${type}
     ${item_index}=  privatmarket_service.sum_of_numbers  ${index}  1
 
-    ${is_click}=  is_click_button  ${item_index}  ${items_count}  ${lot_index}
-    Run Keyword If  '${is_click}' == 'true' and ${type} == 'negotiation'  Wait Visibility And Click Element  xpath=(//button[@data-id='actAddItem'])[${lot_index}]
+    ${item_plans_count}=  Get Matching Xpath Count  xpath=//div[@data-id='item']
+    ${diff}=  evaluate  ${items_count}-${item_plans_count}
+    : FOR  ${index}  IN RANGE  0  ${diff}
+    \  Wait Visibility And Click Element  xpath=(//button[@data-id='actAddItem'])[${lot_index}]
+
+#    ${is_click}=  is_click_button  ${item_index}  ${items_count}  ${lot_index}
+#    Run Keyword If  '${is_click}' == 'true' and ${type} == 'negotiation'  Wait Visibility And Click Element  xpath=(//button[@data-id='actAddItem'])[${lot_index}]
     Wait Element Visibility And Input Text  xpath=(((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])//input[@data-id='description'])[${item_index}]  ${items[${index}].description}
 
     Run Keyword Unless  ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'esco'  Вказати вид предмету закупівлі  ${TENDER_DATA.data.mainProcurementCategory}  ${item_index}  ${lot_index}
