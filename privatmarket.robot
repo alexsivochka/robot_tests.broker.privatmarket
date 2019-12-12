@@ -1368,7 +1368,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionValue'])[last()]  ${tender_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionTitle'])[last()]  ${tender_enums[${index}].title}
-    \  Run Keyword And Ignore Error  Wait Element Visibility And Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[last()]  ${tender_enums[${index}].title}
+    \  Run Keyword And Ignore Error
+    \  ...  Run Keywords
+    \  ...  Wait Until Element Is Visible  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[last()]  5s
+    \  ...  AND  Input Text  xpath=(//*[@data-id='ptrFeatures']//input[@data-id='criterionTitleEn'])[last()]  ${tender_enums[${index}].title}
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
@@ -1411,7 +1414,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionValue'])[last()]  ${lot_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitle'])[last()]  ${lot_enums[${index}].title}
-    \  Run Keyword And Ignore Error  Wait Element Visibility And Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[last()]  ${lot_enums[${index}].title}
+    \  Run Keyword And Ignore Error
+    \  Run Keywords
+    \  ...  Wait Until Element Is Visible  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[last()]  5s
+    \  AND  Input Text  xpath=(//div[@data-id='lot']//input[@data-id='criterionTitleEn'])[last()]  ${lot_enums[${index}].title}
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
@@ -1454,7 +1460,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ${elem_index}=  privatmarket_service.sum_of_numbers  ${index}  1
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionValue'])[last()]  ${item_criterion_value}
     \  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitle'])[last()]  ${item_enums[${index}].title}
-    \  Run Keyword And Ignore Error  Wait Element Visibility And Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[last()]  ${item_enums[${index}].title}
+    \  Run Keyword And Ignore Error
+    \  ...  Run Keywords
+    \  ...  Wait Until Element Is Visible  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[last()]  5s
+    \  ...  AND  Input Text  xpath=(//div[@data-id='item']//input[@data-id='criterionTitleEn'])[last()]  ${item_enums[${index}].title}
 
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
@@ -2010,7 +2019,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  Should Be Equal As Numbers  ${value}  ${amountNet}
     ...  Amount should be greater than amountNet and differ by no more than 20.0%
 
-    Sleep  60s
+    Sleep  70s
     Reload Page
 
 
