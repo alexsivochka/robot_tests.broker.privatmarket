@@ -1936,6 +1936,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 Підтвердити підписання контракту
     [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
     ${tender_type}=  Отримати інформацію з procurementMethodType
+    ${scenarios_name}=  privatmarket_service.get_scenarios_name
     Відкрити детальну інформацію про контракт
     Run Keyword If
     ...  'Неможливість' in '${TEST_NAME}'  Wait Until Element Is Visible  css=input[data-id='contract.title']  5s
@@ -1947,7 +1948,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait For Element With Reload  xpath=//span[@id='contractStatus']  1
     Wait Visibility And Click Element  xpath=//div[contains(@class,'contracts info')]//div[@id='noEcp']
     Sleep  1s
-    Run Keyword  Завантажити ЕЦП
+    Run Keyword Unless  'single_item' in '${scenarios_name}'  Run Keyword  Завантажити ЕЦП
     Sleep  2min
 
 
