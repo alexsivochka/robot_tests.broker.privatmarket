@@ -3240,7 +3240,7 @@ Scroll To Element
     Run Keyword Unless  'checked' in '${class}'  Click Element  xpath=(//a[contains(@ng-class, 'lot-parts')])[1]
     Wait For Element With Reload  xpath=//a[contains(., 'Переможець')]  1
     ${date}=  Get Element Attribute  xpath=//a[contains(., 'Переможець')]@data-complaint-period-end
-    ${result}=  privatmarket_service.get_time_with_offset_formatted  ${date}  %d.%m.%Y %H:%M
+    ${result}=  privatmarket_service.get_time_with_offset_formatted  ${date}  %d.%m.%Y %H:%M:%S
     [Return]  ${result}
 
 
