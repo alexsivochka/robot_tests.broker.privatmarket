@@ -2379,6 +2379,10 @@ Wait For Tender Status
 
 Отримати інформацію з maxAwardsCount
     [Arguments]  ${field_name}
+    Run Keyword If  'зміненої' in '${TEST_NAME}'
+    ...  Run Keywords
+    ...  sleep  45s
+    ...  AND  Reload Page
     Wait For Ajax
     ${count}=  Get Element Attribute  xpath=//div[@data-id='maxAwardsCount']@innerHTML
     ${result}=  Convert To Integer  ${count}
