@@ -713,7 +713,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 
 Створити тендер
-    [Arguments]  ${username}  ${tender_data}
+    [Arguments]  ${username}  ${tender_data}  ${tender_id}  ${tender_owner_access_token}
     Set Global Variable  ${TENDER_DATA}  ${tender_data}
     ${presence}=  Run Keyword And Return Status  List Should Contain Value  ${tender_data.data}  lots
     @{lots}=  Run Keyword If  ${presence}  Get From Dictionary  ${tender_data.data}  lots
