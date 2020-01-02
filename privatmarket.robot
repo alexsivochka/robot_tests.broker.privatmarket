@@ -2369,6 +2369,7 @@ Wait For Tender Status
 
 Отримати статус рамкової угоди
     [Arguments]  ${field_name}
+    Sleep  90s
     Wait For Element With Reload  xpath=//span[contains(@data-id,'agreement-id')]  1
     ${status}=  Get Element Attribute  xpath=//span[contains(@data-id,'agreement-id')]@data-agreement-status
     [Return]  ${status}
