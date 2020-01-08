@@ -3765,7 +3765,8 @@ Get Item Number
     Wait Until Element Is Visible  xpath=//a[contains(@ng-class, 'lot-parts')]  ${COMMONWAIT}
     ${class}=  Get Element Attribute  xpath=//a[contains(@ng-class, 'lot-parts')]@class
     Run Keyword Unless  'checked' in '${class}'  Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
-    Wait Visibility And Click Element  xpath=//span[contains(@ng-if,'CancelAwardDecision')]
+#    Wait Visibility And Click Element  xpath=//span[contains(@ng-if,'CancelAwardDecision')]
+    Wait Visibility And Click Element  xpath=//span[contains(@ng-click,'openCancelQualification')]
     Wait Visibility And Click Element  xpath=//button[@data-id='btn-cancel-qualification-or-award']
     Wait Until Element Is Visible  xpath=//div[contains(text(),'Ваше рішення поставлено в чергу на відправку в Prozorro')]  ${COMMONWAIT}
     Click Element  xpath=//button[@data-id='btn-close']
