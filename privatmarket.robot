@@ -2091,6 +2091,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Sleep  5s
     Execute Javascript  var contractHash = angular.element('[data-id=contractHash]').text().trim(); angular.element('[ng-controller=contract_edit_ctrl]').scope().injectDates({id: contractHash,dateSigned: ${contract_date_signed}});
     Execute Javascript  var contractHash = angular.element('[data-id=contractHash]').text().trim(); angular.element('[ng-controller=contract_edit_ctrl]').scope().injectDates({id: contractHash,startDate: ${contract_start_date}, endDate: ${contract_end_date}});
+    ${tender_uaid}=  Remove String Using Regexp  ${tender_uaid}  \\.\\d$
     Wait Element Visibility And Input Text  css=input[data-id='contract.title']  ${tender_uaid}
     Wait Element Visibility And Input Text  css=#contractNumber  ${tender_uaid}
     Опублікувати договір  ${tender_uaid}
