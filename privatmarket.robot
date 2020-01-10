@@ -458,10 +458,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='actConfirm']
     \  Wait Element Visibility And Input Text  xpath=(//input[@data-id='description'])[${index_xpath}]  ${items[${index}].description}
     \  ${mainProcurementCategory}=  Run Keyword If  'створити звіт' in '${TEST_NAME}'  privatmarket_service.get_mainProcurementCategory  ${TENDER_DATA.data.mainProcurementCategory}
-    \  Run Keyword If  'створити звіт' in '${TEST_NAME}'
-    \  ...  Run Keywords
-    \  ...  Wait Visibility And Click Element  xpath=(//div[@data-id='item']//span[contains(text(), '${mainProcurementCategory}')])[${index_xpath}]/preceding-sibling::input[1]
-    \  ...  AND  Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//button[@data-id='modalOkBtn']
+#    \  Run Keyword If  'створити звіт' in '${TEST_NAME}'
+#    \  ...  Run Keywords
+#    \  ...  Wait Visibility And Click Element  xpath=(//div[@data-id='item']//span[contains(text(), '${mainProcurementCategory}')])[${index_xpath}]/preceding-sibling::input[1]
+#    \  ...  AND  Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//button[@data-id='modalOkBtn']
     \  ${item_quantity}=  Convert To String  ${items[${index}].quantity}
     \  Run Keyword Unless  '${MODE}' == 'esco'  Input Text  xpath=(//input[@data-id='quantity'])[${index_xpath}]  ${item_quantity}
     \  Run Keyword Unless  '${MODE}' == 'esco'  Select From List By Label  xpath=(//select[@data-id='unit'])[${index_xpath}]  ${items[${index}].unit.name}
@@ -477,10 +477,13 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 
 Вказати вид предмету закупівлі
-    [Arguments]  ${value}  ${index_xpath}  ${lot_index}
-    ${type}=  Run Keyword  privatmarket_service.get_mainProcurementCategory  ${TENDER_DATA.data.mainProcurementCategory}
-    Wait Visibility And Click Element  xpath=((//div[@data-id='lot'])[${lot_index}]//span[contains(text(), '${type}')])[${index_xpath}]/preceding-sibling::input[1]
-    Run Keyword And Ignore Error  Click Element  xpath=//button[@data-id='modalOkBtn']
+    [Arguments]  ${value}
+    Wait Visibility And Click Element  xpath=//*[contains(@ng-click,'defineProcurementCategory')]
+    Wait Visibility And Click Element  xpath=//input[contains(@data-id,'chooseMainProcurementCategory')][@value='${value}']
+    Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
+#    ${type}=  Run Keyword  privatmarket_service.get_mainProcurementCategory  ${TENDER_DATA.data.mainProcurementCategory}
+#    Wait Visibility And Click Element  xpath=((//div[@data-id='lot'])[${lot_index}]//span[contains(text(), '${type}')])[${index_xpath}]/preceding-sibling::input[1]
+#    Run Keyword And Ignore Error  Click Element  xpath=//button[@data-id='modalOkBtn']
 
 
 Внести зміни в план
@@ -765,6 +768,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Element Visibility And Input Text  css=input[data-id='procurementName']  ${tender_data.data.title}
     Wait Element Visibility And Input Text  css=textarea[data-id='procurementDescription']  ${tender_data.data.description}
 
+    Run Keyword Unless  ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'esco'  Вказати вид предмету закупівлі  ${tender_data.data.mainProcurementCategory}
+
     #Run Keyword IF  ${type} == 'aboveThresholdEU' or ${type} == 'competitiveDialogueEU' or ${type} == 'esco' or 'FrameworkAgreement' in ${type}
     Run Keyword And Ignore Error
     ...  Run Keywords
@@ -969,7 +974,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 #    Run Keyword If  '${is_click}' == 'true' and ${type} == 'negotiation'  Wait Visibility And Click Element  xpath=(//button[@data-id='actAddItem'])[${lot_index}]
     Wait Element Visibility And Input Text  xpath=(((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])//input[@data-id='description'])[${item_index}]  ${items[${index}].description}
 
-    Run Keyword Unless  ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'esco'  Вказати вид предмету закупівлі  ${TENDER_DATA.data.mainProcurementCategory}  ${item_index}  ${lot_index}
+#    Run Keyword Unless  ${type} == 'closeFrameworkAgreementSelectionUA' or ${type} == 'esco'  Вказати вид предмету закупівлі  ${TENDER_DATA.data.mainProcurementCategory}  ${item_index}  ${lot_index}
 
     ${item_quantity}=  Convert To String  ${items[${index}].quantity}
 
