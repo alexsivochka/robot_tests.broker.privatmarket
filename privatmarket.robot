@@ -751,9 +751,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait For Ajax
     Run Keyword If
     ...  'openua_award_complaint' in '${scenarios_name}'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1080')]
-    ...  ELSE IF  ${type} == '' and 'before_resolved_award_complaint' in '${scenarios_name}'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '720')]
-    ...  ELSE IF  ${type} == '' and 'after_resolved_award_complaint' in '${scenarios_name}'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '144')]
-    ...  ELSE IF  ${type} == ''  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
+    ...  ELSE IF  ${type} == 'belowThreshold' and 'before_resolved_award_complaint' in '${scenarios_name}'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '720')]
+    ...  ELSE IF  ${type} == 'belowThreshold' and 'after_resolved_award_complaint' in '${scenarios_name}'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '144')]
+    ...  ELSE IF  ${type} == 'belowThreshold'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
     ...  ELSE IF  ${type} == 'competitiveDialogueEU' or ${type} == 'competitiveDialogueUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1080')]
     ...  ELSE IF  ${type} == 'reporting'  no operation
     ...  ELSE IF  ${type} == 'closeFrameworkAgreementSelectionUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '360')]
