@@ -757,7 +757,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  ELSE IF  ${type} == 'belowThreshold' and 'before_resolved_award_complaint' in '${scenarios_name}'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '720')]
     ...  ELSE IF  ${type} == 'belowThreshold' and 'after_resolved_award_complaint' in '${scenarios_name}'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '144')]
     ...  ELSE IF  ${type} == 'belowThreshold'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
-    ...  ELSE IF  ${type} == 'competitiveDialogueEU' or ${type} == 'competitiveDialogueUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1080')]
+    ...  ELSE IF  ${type} == 'competitiveDialogueEU' or ${type} == 'competitiveDialogueUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
     ...  ELSE IF  ${type} == 'reporting'  no operation
     ...  ELSE IF  ${type} == 'closeFrameworkAgreementSelectionUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '360')]
     ...  ELSE  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
@@ -3847,7 +3847,7 @@ Get Item Number
     Run Keyword And Ignore Error  Choose File  css=input[id='fileToUpload']  ${document}
     Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//select[@id='addressCountry']//option[@value='UA']
     Wait Element Visibility And Input Text  css=#addressPostalCode  ${claim.data.author.address.postalCode}
-    Wait Element Visibility And Input Text  css=#addressRegion  ${claim.data.author.address.countryName}
+    Wait Element Visibility And Input Text  css=#addressRegion  ${claim.data.author.address.region}
     Wait Element Visibility And Input Text  css=#addressLocality  ${claim.data.author.address.locality}
     Wait Element Visibility And Input Text  css=#addressStreet  ${claim.data.author.address.streetAddress}
     @{contactPoint} =  Split String  ${claim.data.author.contactPoint.name}
