@@ -4039,7 +4039,7 @@ Get Item Number
     Wait Element Visibility And Input Text  css=#questionDescription  ${question.data.description}
     Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//select[@id='addressCountry']//option[@value='UA']
     Wait Element Visibility And Input Text  css=#addressPostalCode  ${question.data.author.address.postalCode}
-    Wait Element Visibility And Input Text  css=#addressRegion  ${question.data.author.address.countryName}
+    Wait Element Visibility And Input Text  css=#addressRegion  ${question.data.author.address.region}
     Wait Element Visibility And Input Text  css=#addressLocality  ${question.data.author.address.locality}
     Wait Element Visibility And Input Text  css=#addressStreet  ${question.data.author.address.streetAddress}
     @{contactPoint} =  Split String  ${question.data.author.contactPoint.name}
@@ -4392,7 +4392,18 @@ Get Item Number
 Активувати другий етап
     [Arguments]  ${username}  ${tender_uaid}
     Log  ${tender_uaid}
+    sleep  200s
     Reload Page
+
+    Wait Visibility And Click Element  xpath=//button[@data-id='editProcBtn']
+    Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
+    Wait Visibility And Click Element  ${locator_tenderadd.btnsave}
+    sleep  5s
+    Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
+    sleep  5s
+    Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
+    Close Confirmation In Editor  Закупівля поставлена в чергу на відправку в ProZorro. Статус закупівлі Ви можете відстежувати в особистому кабінеті.
+
     Run Keyword IF  '${MODE}' == 'open_competitive_dialogue'  Wait For Element With Reload  css=[data-tender-status='active.tendering']  1
 
     Wait Until Element Is Visible  xpath=//span[@id='tenderId']  ${COMMONWAIT}
