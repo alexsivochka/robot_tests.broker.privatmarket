@@ -40,6 +40,12 @@ def add_day_to_date(date):
     new = parser.parse(new_date).isoformat()
     return new
 
+def add_five_minutes_to_date(date):
+    dat = parser.parse(date)
+    new_date = (dat + timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%S%z')
+    new = parser.parse(new_date).isoformat()
+    return new
+
 def get_currency_type(currency):
     if isinstance(currency, str):
         currency = currency.decode("utf-8")

@@ -4392,17 +4392,6 @@ Get Item Number
 Активувати другий етап
     [Arguments]  ${username}  ${tender_uaid}
     Log  ${tender_uaid}
-    sleep  200s
-    Reload Page
-
-    Wait Visibility And Click Element  xpath=//button[@data-id='editProcBtn']
-    Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
-    Wait Visibility And Click Element  ${locator_tenderadd.btnsave}
-    sleep  5s
-    Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
-    sleep  5s
-    Wait Visibility And Click Element  ${locator_tenderCreation.buttonSend}
-    Close Confirmation In Editor  Закупівля поставлена в чергу на відправку в ProZorro. Статус закупівлі Ви можете відстежувати в особистому кабінеті.
 
     Run Keyword IF  '${MODE}' == 'open_competitive_dialogue'  Wait For Element With Reload  css=[data-tender-status='active.tendering']  1
 
@@ -4420,7 +4409,17 @@ Get Item Number
     Run Keyword If  'тендер другого етапу' in '${TEST_NAME}' or 'на другому етапі' in '${TEST_NAME}'
     ...  Wait Visibility And Click Element  xpath=//a[@ng-click='act.move2NextStage()']
 
-    Run Keyword And Ignore Error  Wait Visibility And Click Element  css=button[data-id='modal-close']
+    Run Keyword And Ignore Error
+    ...  Run Keywords
+    ...  Wait Until Element Is Visible  css=button[data-id='modal-close']  5s
+    ...  AND  Click Element  css=button[data-id='modal-close']
+
+    Wait Until Element Is Visible  xpath=//input[@data-id='tenderPeriodEnd']  ${COMMONWAIT}
+    ${end}=  Get Element Attribute  xpath=//input[@data-id='tenderPeriodEnd']@value
+    ${value}=  privatmarket_service.get_time_with_offset_formatted  ${end}  %d-%m-%Y %H:%M
+    ${value}=  privatmarket_service.add_five_minutes_to_date  ${value}
+    Set Date  tenderPeriod  endDate  ${value}
+
     Wait Visibility And Click Element  ${locator_tenderadd.btnsave}
     sleep  5s
     Wait Until Element Is Visible  xpath=//span[@title='Лоти та предмети закупівлі']  ${COMMONWAIT}
