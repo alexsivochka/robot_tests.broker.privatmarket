@@ -4154,6 +4154,7 @@ Get Item Number
     Wait Visibility And Click Element  xpath=//button[@data-id='save-bid-btn']
 
     Wait Visibility And Click Element  xpath=//button[@data-id='save-bid-btn']
+    sleep  5s
     Wait Visibility And Click Element  xpath=//button[@data-id='modalOkBtn']
 
     Wait Visibility And Click Element  xpath=//label[@for='chkSelfQualified']
