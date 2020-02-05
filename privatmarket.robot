@@ -811,8 +811,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
     #procuringEntityAddress
     Wait Element Visibility And Input Text  ${locator_lotAdd.postalCode}  ${tender_data.data.procuringEntity.address.postalCode}
-    Wait Element Visibility And Input Text  ${locator_lotAdd.countryName}  ${tender_data.data.procuringEntity.address.countryName}
-    Wait Element Visibility And Input Text  ${locator_lotAdd.region}  ${tender_data.data.procuringEntity.address.region}
+    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@value='string:${tender_data.data.procuringEntity.address.countryName}']
+    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@value='string:${tender_data.data.procuringEntity.address.region}']
+#    Wait Element Visibility And Input Text  ${locator_lotAdd.countryName}  ${tender_data.data.procuringEntity.address.countryName}
+#    Wait Element Visibility And Input Text  ${locator_lotAdd.region}  ${tender_data.data.procuringEntity.address.region}
     Wait Element Visibility And Input Text  ${locator_lotAdd.locality}  ${tender_data.data.procuringEntity.address.locality}
     Wait Element Visibility And Input Text  ${locator_lotAdd.streetAddress}  ${tender_data.data.procuringEntity.address.streetAddress}
 
@@ -1021,8 +1023,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  Wait Visibility And Click Element  xpath=((//div[@data-id='lot'])[${lot_index}]//span[contains(text(), 'точна адреса')])[${item_index}]//preceding-sibling::input
 
     Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='postalCode']  ${items[${index}].deliveryAddress.postalCode}
-    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='countryName']  ${items[${index}].deliveryAddress.countryName}
-    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='region']  ${items[${index}].deliveryAddress.region}
+    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@value='string:${items[0].deliveryAddress.countryName}']
+    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@value='string:${items[0].deliveryAddress.region}']
+#    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='countryName']  ${items[${index}].deliveryAddress.countryName}
+#    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='region']  ${items[${index}].deliveryAddress.region}
     Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='locality']  ${items[${index}].deliveryAddress.locality}
     Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='streetAddress']  ${items[${index}].deliveryAddress.streetAddress}
 
@@ -4042,7 +4046,7 @@ Get Item Number
     [Arguments]  ${question}
     Wait Element Visibility And Input Text  css=#questionTitle  ${question.data.title}
     Wait Element Visibility And Input Text  css=#questionDescription  ${question.data.description}
-#    Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//select[@id='addressCountry']//option[@value='UA']
+    Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//select[@id='addressCountry']//option[@value='UA']
     Wait Element Visibility And Input Text  css=#addressPostalCode  ${question.data.author.address.postalCode}
     Wait Element Visibility And Input Text  css=#addressRegion  ${question.data.author.address.region}
     Wait Element Visibility And Input Text  css=#addressLocality  ${question.data.author.address.locality}
@@ -4547,7 +4551,7 @@ Get Item Number
     Wait For Element With Reload  xpath=//button[@data-id='finishQualBtn']  1
     Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//button[@data-id='finishQualBtn']
-    sleep  15s
+    sleep  1000s
 
 
 Встановити ціну за одиницю для контракту
