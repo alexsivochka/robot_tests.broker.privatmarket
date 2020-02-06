@@ -1904,7 +1904,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@value='string:${supplier_data.data.suppliers[0].address.countryName}']
     Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@value='string:${supplier_data.data.suppliers[0].address.region}']
 #    Wait Element Visibility And Input Text  css=input[ng-model='supplier.address.region']  ${supplier_data.data.suppliers[0].address.region}
-    Wait Element Visibility And Input Text  css=input[ng-model='supplier.address.region']  ${supplier_data.data.suppliers[0].address.region}
+#    Wait Element Visibility And Input Text  css=input[ng-model='supplier.address.region']  ${supplier_data.data.suppliers[0].address.region}
     Wait Element Visibility And Input Text  css=input[ng-model='supplier.address.locality']  ${supplier_data.data.suppliers[0].address.locality}
     Wait Element Visibility And Input Text  css=input[ng-model='supplier.address.streetAddress']  ${supplier_data.data.suppliers[0].address.streetAddress}
 
@@ -4649,7 +4649,7 @@ Get Item Number
     ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Clear Element Text  xpath=//input[@data-id='modification-factor-input']
     ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-factor-input']  1.01
     ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='review-changes']
-
+    debug
     Run Keyword If  '${rationaleType}' == 'partyWithdrawal'
     ...  Run Keywords
     ...  Wait Visibility And Click Element  xpath=//div[contains(@class,'agreements')]//span[text()='Сторони рамкової угоди']
@@ -4660,12 +4660,14 @@ Get Item Number
     ...  AND  Wait Element Visibility And Input Text  xpath=//input[@name='rationale']  ${change_data.data.rationale}
     ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='save-agreement-change-draft']
     ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
+    debug
     sleep  30s
 
 
 Оновити властивості угоди
     [Arguments]  ${username}  ${agreement_uaid}  ${change_data}
     Reload Page
+    debug
     Wait Visibility And Click Element  css=a#agreementBtn
     Wait Visibility And Click Element  xpath=//a/span[text()='Зміни до рамкової угоди']
     ${field_name}=  Run Keyword  privatmarket_service.get_change_field_name  ${change_data.data.modifications[0]}
