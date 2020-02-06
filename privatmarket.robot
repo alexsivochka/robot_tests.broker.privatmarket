@@ -469,9 +469,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ...  Run Keywords
     \  ...  Wait Visibility And Click Element  xpath=(//span[contains(text(), 'точна адреса')])[${index_xpath}]//preceding-sibling::input
     \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='postalCode'])[${index_xpath}]  ${items[${index}].deliveryAddress.postalCode}
-#    \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='countryName'])[${index_xpath}]  ${items[${index}].deliveryAddress.countryName}
-    \  ...  AND  Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@label='${items[${index}].deliveryAddress.postalCode}']
-#    \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='region'])[${index_xpath}]  ${items[${index}].deliveryAddress.region}
+    \  ...  AND  Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@label='${items[${index}].deliveryAddress.countryName}']
     \  ...  AND  Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@label='${items[${index}].deliveryAddress.region}']
     \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='locality'])[${index_xpath}]  ${items[${index}].deliveryAddress.locality}
     \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='streetAddress'])[${index_xpath}]  ${items[${index}].deliveryAddress.streetAddress}
