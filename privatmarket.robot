@@ -4046,9 +4046,11 @@ Get Item Number
     [Arguments]  ${question}
     Wait Element Visibility And Input Text  css=#questionTitle  ${question.data.title}
     Wait Element Visibility And Input Text  css=#questionDescription  ${question.data.description}
-    Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//select[@id='addressCountry']//option[@value='UA']
+#    Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//select[@id='addressCountry']//option[@value='UA']
+    Wait Visibility And Click Element  xpath=//select[@id='addressCountry']//option[@label='${question.data.author.address.countryName}']
     Wait Element Visibility And Input Text  css=#addressPostalCode  ${question.data.author.address.postalCode}
-    Wait Element Visibility And Input Text  css=#addressRegion  ${question.data.author.address.region}
+#    Wait Element Visibility And Input Text  css=#addressRegion  ${question.data.author.address.region}
+    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@label='${question.data.author.address.region}']
     Wait Element Visibility And Input Text  css=#addressLocality  ${question.data.author.address.locality}
     Wait Element Visibility And Input Text  css=#addressStreet  ${question.data.author.address.streetAddress}
     @{contactPoint} =  Split String  ${question.data.author.contactPoint.name}
