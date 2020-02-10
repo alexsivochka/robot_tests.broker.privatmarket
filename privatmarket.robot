@@ -76,6 +76,7 @@ ${tender_data_items[0].description}  xpath=//div[@class='description']
 ${tender_data_items[0].quantity}  xpath=(//div[@ng-if='adb.quantity']/div[2]/span)[1]
 ${tender_data_lots[0].value.amount}  xpath=//div[@id='lotAmount']
 ${tender_data_lots[0].minimalStep.amount}  xpath=//div[@id='lotMinStepAmount']
+${tender_data_lots[0].title}   xpath=//div[@id='lot-title']
 
 ${tender_data_lot.title}  //div[@id='lot-title'])
 ${tender_data_lot.description}  //section[contains(@class, 'description marged')])
@@ -151,10 +152,10 @@ ${tender_data_contracts[0].value.amountNet}  xpath=//*[@id='contractAmount']/../
 ${tender_data_contracts[1].value.amountNet}  xpath=//*[@id='contractAmount']/../../following-sibling::dl/dd
 ${tender_data_contracts[0].status}  xpath=//span[@id='contractStatus']
 ${tender_data_contracts[1].status}  xpath=//span[@id='contractStatus']
-${tender_data_contracts[1].dateSigned}  xpath=//div[contains(@class,'contracts info')]//*[text()='Договiр №:']/following-sibling::*/span
-${tender_data_contracts[1].period.startDate}  xpath=//div[contains(@class,'contracts info')]//*[text()='Дата початку:']/following-sibling::*/span
-${tender_data_contracts[1].period.endDate}  xpath=//div[contains(@class,'contracts info')]//*[text()='Дата кiнця:']/following-sibling::*/span
-${tender_data_contracts[0].dateSigned}  xpath=//div[contains(@class,'contracts info')]//*[text()='Договiр №:']/following-sibling::*/span
+${tender_data_contracts[1].dateSigned}  xpath=//div[contains(@class,'contracts info')]//*[text()='Договiр №:']/following-sibling::*//span
+${tender_data_contracts[1].period.startDate}  xpath=(//div[contains(@class,'contracts info')]//*[text()='Дата початку:']/following-sibling::*/span)[2]
+${tender_data_contracts[1].period.endDate}  xpath=(//div[contains(@class,'contracts info')]//*[text()='Дата кiнця:']/following-sibling::*/span)[2]
+${tender_data_contracts[0].dateSigned}  xpath=//div[contains(@class,'contracts info')]//*[text()='Договiр №:']/following-sibling::*//span
 ${tender_data_contracts[0].period.startDate}  xpath=//div[contains(@class,'contracts info')]//*[text()='Дата початку:']/following-sibling::*/span
 ${tender_data_contracts[0].period.endDate}  xpath=//div[contains(@class,'contracts info')]//*[text()='Дата кiнця:']/following-sibling::*/span
 ${tender_data_features[0].title}  css=div.no-price span[data-id='feature.title']
@@ -759,7 +760,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  ELSE IF  ${type} == 'belowThreshold'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
     ...  ELSE IF  ${type} == 'competitiveDialogueEU' or ${type} == 'competitiveDialogueUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
     ...  ELSE IF  ${type} == 'reporting'  no operation
-    ...  ELSE IF  ${type} == 'closeFrameworkAgreementSelectionUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '360')]
+    ...  ELSE IF  ${type} == 'closeFrameworkAgreementSelectionUA'  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '144')]
     ...  ELSE  Wait Visibility And Click Element  xpath=//select[@data-id='accelerator-select']/option[contains(., '1440')]
 
 #step 0
@@ -1284,6 +1285,11 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword If  '${parameter}' == 'description'  Wait Element Visibility And Input Text  css=textarea[data-id='procurementDescription']  ${value}
     Run Keyword If  '${parameter}' == 'maxAwardsCount'  Wait Element Visibility And Input Text  css=input[data-id='maxAwardsCount']  ${value}
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
+    ${items_quantity}=  convert to string  ${value}
+    Run Keyword If  '${parameter}' == 'items[0].quantity'
+    ...  Run Keywords
+    ...  Wait Element Visibility And Input Text  xpath=//input[@data-id='quantity']  ${items_quantity}
+    ...  AND  Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     sleep  5s
     Execute JavaScript    window.scrollTo(${0},${0})
     Wait Visibility And Click Element  xpath=//span[@title='Перевірка та публікація']
@@ -1347,8 +1353,13 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 Змінити minimalStep.amount лоту
     [Arguments]  ${value}
+    Run Keyword If  '${mode}' == 'framework_selection'
+    ...  run keywords
+    ...  Wait Visibility And Click Element  ${locator_tenderClaim.buttonCreate}
+    ...  AND  Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     ${minimalStep_amount}=  Convert to String  ${value}
-    Wait Element Visibility And Input Text  css=input[data-id='minimalStepAmount']  ${minimalStep_amount}
+    Run Keyword Unless  '${mode}' == 'framework_selection'
+    ...  Wait Element Visibility And Input Text  css=input[data-id='minimalStepAmount']  ${minimalStep_amount}
     Wait Visibility And Click Element  ${locator_tenderAdd.btnSave}
     Wait For Ajax
     Execute JavaScript    window.scrollTo(${0},${0})
@@ -1838,7 +1849,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     #get information
     ${result}=  Run Keyword If
     ...  'award_view' in @{TEST_TAGS} or 'add_contract' in @{TEST_TAGS}  Отримати інформацію про постачальника  ${tender_uaid}  ${field_name}
-    ...  ELSE IF  'contract_value' in @{TEST_TAGS} or 'contract_view' in @{TEST_TAGS} or 'doc_to_contract' in @{TEST_TAGS}  Отримати інформацію з контракту  ${tender_uaid}  ${field_name}
+    ...  ELSE IF  'contract_value' in @{TEST_TAGS} or 'contract_view' in @{TEST_TAGS} or 'contract_view_dateSigned' in @{TEST_TAGS} or 'doc_to_contract' in @{TEST_TAGS}  Отримати інформацію з контракту  ${tender_uaid}  ${field_name}
     ...  ELSE  Отримати інформацію зі сторінки  ${user_name}  ${tender_uaid}  ${field_name}
     [Return]  ${result}
 
@@ -2678,7 +2689,7 @@ Wait For Tender Status
     [Arguments]  ${username}  ${tender_uaid}  ${doc_id}  ${field}
     sleep  60s
     Reload Page
-    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS}
+    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS} or 'add_doc_to_contract_title' in @{TEST_TAGS}
     ...  Відкрити детальну інформацію про контракт
 
     Run Keyword And Return If  'contract_doc_documentOf' in @{TEST_TAGS}  Отримати documentOf  ${doc_id}
@@ -2916,7 +2927,7 @@ Scroll To Element
     [Arguments]  ${username}  ${tender_uaid}  ${doc_id}
     sleep  30s
     Reload Page
-    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS}
+    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS} or 'add_doc_to_contract_content' in @{TEST_TAGS}
     ...  Відкрити детальну інформацію про контракт
 
     Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS}
