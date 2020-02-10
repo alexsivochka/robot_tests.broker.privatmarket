@@ -900,7 +900,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 Створити тендер другого етапу
      [Arguments]  ${username}  ${adapted_data}
-     ${tender_id}=  privatmarket.Створити тендер  ${username}  ${adapted_data}
+     ${tender_id}=  privatmarket.Створити тендер  ${username}  ${adapted_data}  0
      [Return]  ${tender_id}
 
 
@@ -2159,6 +2159,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword And Return If  '${field_name}' == 'enquiryPeriod.clarificationsUntil'  Отримати інформацію з ${field_name}  ${field_name}
     Run Keyword And Return If  '${field_name}' == 'budget.amount'  Convert Amount To Number  ${field_name}
     Run Keyword If  '${field_name}' == 'agreements[0].agreementID' and 'framework_agreement' in '${scenarios_name}'  Відкрити детальну інформацію про рамкові угоди
+    Run Keyword And Return If  '${field_name}' == 'items[0].quantity' and 'framework_selection' in '${scenarios_name}'  Отримати число  ${tender_data_${field_name}}  0
 
     Wait Until Element Is Visible  ${tender_data_${field_name}}
     ${result_full}=  Get Text  ${tender_data_${field_name}}
@@ -2190,6 +2191,10 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     sleep  15s
     Reload Page
     Wait For Element With Reload  css=div.agreements  1
+
+    Run Keyword And Return If  'contracts[0].id' in '${field_name}'  Get Element Attribute  xpath=//*[@data-id='agreement-contract-id']@data-agreement-contract-id
+    Run Keyword And Return If  'items[0].id' in '${field_name}'  Get Element Attribute  xpath=//*[@data-id='agreement-item-id']@data-agreement-item-id
+
     Wait Visibility And Click Element  xpath=//*[text()='Зміни до рамкової угоди']
 
     Wait Visibility And Click Element  xpath=(//*[@data-id='change']//span[@data-id='change-open'])[1]
@@ -4647,9 +4652,9 @@ Get Item Number
     ...  AND  Run Keyword If  'taxRate' in '${TEST_NAME}'  Wait Visibility And Click Element  xpath=//label[@for='priceValue0']
     ...  AND  Run Keyword If  'taxRate' in '${TEST_NAME}'  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-addend-input']  1
     ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Clear Element Text  xpath=//input[@data-id='modification-factor-input']
-    ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-factor-input']  1.01
+    ...  AND  Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-factor-input']  10
     ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='review-changes']
-    debug
+
     Run Keyword If  '${rationaleType}' == 'partyWithdrawal'
     ...  Run Keywords
     ...  Wait Visibility And Click Element  xpath=//div[contains(@class,'agreements')]//span[text()='Сторони рамкової угоди']
@@ -4658,16 +4663,14 @@ Get Item Number
     ...  AND  Wait Visibility And Click Element  xpath=//button[contains(@ng-click,'confirmPartyWithdrawalChanges')]
     ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='modalOkBtn']
     ...  AND  Wait Element Visibility And Input Text  xpath=//input[@name='rationale']  ${change_data.data.rationale}
-    ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='save-agreement-change-draft']
-    ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
-    debug
+    ...  AND  Wait Visibility And Click Element  xpath=//button[@data-id='review-changes']
     sleep  30s
 
 
 Оновити властивості угоди
     [Arguments]  ${username}  ${agreement_uaid}  ${change_data}
     Reload Page
-    debug
+
     Wait Visibility And Click Element  css=a#agreementBtn
     Wait Visibility And Click Element  xpath=//a/span[text()='Зміни до рамкової угоди']
     ${field_name}=  Run Keyword  privatmarket_service.get_change_field_name  ${change_data.data.modifications[0]}
@@ -4675,6 +4678,11 @@ Get Item Number
     ${field_value}=  Convert To String  ${field_value}
 
     Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Clear Element Text  xpath=//input[@data-id='modification-factor-input']
+
+    # Приводим factor к процентам для соответствия ТЗ
+    ${factor_percent}=  Evaluate  (${field_value}-1)*100
+    ${factor_percent}=  Convert To String  ${factor_percent}
+    ${field_value}=  Set Variable If  '${field_name}' == 'factor'  ${factor_percent}  ${field_value}
 
     Run Keyword If  '${field_name}' == 'addend'
     ...  Wait Element Visibility And Input Text  xpath=//input[@data-id='modification-addend-input']  ${field_value}
@@ -4712,20 +4720,20 @@ Get Item Number
     Wait Element Visibility And Input Text  xpath=//input[contains(@data-id,'dateSigned')]  ${signed}
     Wait Visibility And Click Element  css=span.glyphicon-calendar
 
-    Run Keyword If  '${status}' == 'cancelled'
+    Run Keyword And Return If  '${status}' == 'cancelled'
     ...  Run Keywords
     ...  Wait Visibility And Click Element  xpath=//button[@data-id='cancel-agreement-changes']
     ...  AND  Wait Visibility And Click Element  xpath=//*[@data-id='modalOkBtn']
 
     Run Keyword If  '${status}' == 'active'
     ...  Wait Visibility And Click Element  xpath=//button[@data-id='activete-agreement-changes']
-    sleep  240s
+    sleep  120s
     Reload Page
     Wait Visibility And Click Element  css=a#agreementBtn
     Wait Visibility And Click Element  xpath=//a/span[text()='Зміни до рамкової угоди']
     Wait Visibility And Click Element  xpath=//div[@data-id='present-ecp']
     Завантажити ЕЦП
-    sleep  240s
+    sleep  120s
 
 
 
@@ -4796,3 +4804,22 @@ Get Item Number
 #  Remove File  ${file_path}
 
 #https://zakupivli24.pb.ua/prz-stage/tender/UA-2019-12-26-000030-c#/info
+
+
+
+#Можливість оновити властивості угоди для внесених змін partyWithdrawal
+#  [Tags]   ${USERS.users['${tender_owner}'].broker}: Внесення зміни
+#  ...      tender_owner
+#  ...      ${USERS.users['${tender_owner}'].broker}
+#  ...      modification
+#  ...      critical
+#  [Setup]  Дочекатись синхронізації з майданчиком  ${tender_owner}
+#  [Teardown]  Оновити LAST_MODIFICATION_DATE
+#
+#  ${username}=  Отримати користувача з доступом до поля за пріорітетом  agreements  ${viewer}  ${tender_owner}
+#
+#  ${change_data}=  Підготувати дані для оновлення властивості угоди
+#  ...      ${tender_owner}
+#  ...      contractId
+#  ...      ${USERS.users['${username}'].agreement_data.data['contracts'][0]['id']}
+#  Run As  ${tender_owner}  Оновити властивості угоди  ${AGREEMENT_UAID}  ${change_data}
