@@ -2694,7 +2694,7 @@ Wait For Tender Status
 
     Run Keyword And Return If  'contract_doc_documentOf' in @{TEST_TAGS}  Отримати documentOf  ${doc_id}
 
-    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS}
+    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'add_doc_to_contract_title' in @{TEST_TAGS}
     ...  Wait Until Element Is Visible  xpath=//div[contains(@${field},'${doc_id}')]  ${COMMONWAIT}
     ...  ELSE  Wait For Element With Reload  xpath=//div[contains(@${field},'${doc_id}')]  1
 
@@ -2930,7 +2930,7 @@ Scroll To Element
     Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS} or 'add_doc_to_contract_content' in @{TEST_TAGS}
     ...  Відкрити детальну інформацію про контракт
 
-    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS}
+    Run Keyword If  'add_doc_to_contract' in @{TEST_TAGS} or 'contract_doc_documentOf' in @{TEST_TAGS} or 'add_doc_to_contract_content' in @{TEST_TAGS}
     ...  Wait Until Element Is Visible  xpath=//div[contains(@title,'${doc_id}')]  ${COMMONWAIT}
     ...  ELSE  Wait For Element With Reload  xpath=//div[contains(@title,'${doc_id}')]  1
 
