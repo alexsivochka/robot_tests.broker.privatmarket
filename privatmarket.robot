@@ -4722,6 +4722,7 @@ Get Item Number
     [Arguments]  ${username}  ${agreement_uaid}  ${dateSigned}  ${status}
     Reload Page
     Wait Visibility And Click Element  css=a#agreementBtn
+    Wait Until Element Is Not Visible  xpath=//img[contains(@src,'loader')]  ${COMMONWAIT}
     Wait Visibility And Click Element  xpath=//a/span[text()='Зміни до рамкової угоди']
 
     ${signed}=  privatmarket_service.convert_date_to_format  ${dateSigned}  %d-%m-%Y %H:%M
