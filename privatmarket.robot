@@ -470,8 +470,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     \  ...  Run Keywords
     \  ...  Wait Visibility And Click Element  xpath=(//span[contains(text(), 'точна адреса')])[${index_xpath}]//preceding-sibling::input
     \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='postalCode'])[${index_xpath}]  ${items[${index}].deliveryAddress.postalCode}
-    \  ...  AND  Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@label='${items[${index}].deliveryAddress.countryName}']
-    \  ...  AND  Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@label='${items[${index}].deliveryAddress.region}']
+    \  ...  AND  Wait Visibility And Click Element  xpath=(//select[contains(@ng-model,'countryName')])[${index_xpath}]/option[@label='${items[${index}].deliveryAddress.countryName}']
+    \  ...  AND  Wait Visibility And Click Element  xpath=(//select[contains(@ng-model,'region')])[${index_xpath}]/option[@label='${items[${index}].deliveryAddress.region}']
     \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='locality'])[${index_xpath}]  ${items[${index}].deliveryAddress.locality}
     \  ...  AND  Wait Element Visibility And Input Text  xpath=(//input[@data-id='streetAddress'])[${index_xpath}]  ${items[${index}].deliveryAddress.streetAddress}
     \  Set Date In Item  ${index}  deliveryDate  endDate  ${items[${index}].deliveryDate.endDate}
