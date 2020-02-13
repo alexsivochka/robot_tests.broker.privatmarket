@@ -2988,6 +2988,7 @@ Scroll To Element
 Отримати інформацію з value.currency
     [Arguments]  ${element_name}
     ${currency}=  Отримати строку  ${element_name}  0
+    ${currency}=  Replace String  ${currency}  .  ${EMPTY}
     ${currency_type}=  get_currency_type  ${currency}
     [Return]  ${currency_type}
 
