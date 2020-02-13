@@ -3716,8 +3716,8 @@ Get Item Number
     Wait For Element With Reload  xpath=//span[@ng-click="act.openAward(b)"]  1
     Wait Visibility And Click Element  xpath=//span[@ng-click="act.openAward(b)"]
 
-    Run Keyword Unless  'single_item' in '${scenarios_name}' or 'до звіту про укладений договір' in '${TEST_NAME}' or 'belowThreshold' in '${tender_type}'  Wait Visibility And Click Element  xpath=//label[@for='chkSelfQualified']
-    Run Keyword Unless  'до переговорної процедури' in '${TEST_NAME}' or 'single_item' in '${scenarios_name}' or 'до звіту про укладений договір' in '${TEST_NAME}' or 'belowThreshold' in '${tender_type}'  Wait Visibility And Click Element  xpath=//label[@for='chkSelfEligible']
+    Run Keyword Unless  'single_item' in '${scenarios_name}' or 'до звіту про укладений договір' in '${TEST_NAME}' or 'belowThreshold' in '${tender_type}' or '${mode}' == 'framework_selection'  Wait Visibility And Click Element  xpath=//label[@for='chkSelfQualified']
+    Run Keyword Unless  'до переговорної процедури' in '${TEST_NAME}' or 'single_item' in '${scenarios_name}' or 'до звіту про укладений договір' in '${TEST_NAME}' or 'belowThreshold' in '${tender_type}' or '${mode}' == 'framework_selection'  Wait Visibility And Click Element  xpath=//label[@for='chkSelfEligible']
 
     ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
     Wait For Ajax
@@ -3739,7 +3739,7 @@ Get Item Number
     ${class}=  Get Element Attribute  xpath=//a[contains(@ng-class, 'lot-parts')]@class
     Run Keyword Unless  'checked' in '${class}'  Click Element  xpath=//a[contains(@ng-class, 'lot-parts')]
 
-    Run Keyword If  'openua_award_complaint' in '${scenarios_name}' or '${mode}' == 'open_esco' or '${mode}' == 'openua' or '${mode}' == 'openeu' or '${mode}' == 'open_framework' or '${mode}' == 'openua_defense' or '${mode}' == 'open_competitive_dialogue'
+    Run Keyword If  'openua_award_complaint' in '${scenarios_name}' or '${mode}' == 'open_esco' or '${mode}' == 'openua' or '${mode}' == 'openeu' or '${mode}' == 'open_framework' or '${mode}' == 'openua_defense' or '${mode}' == 'open_competitive_dialogue' or '${mode}' == 'framework_selection'
     ...  Run Keywords
     ...  Wait Until Keyword Succeeds  10min  10s  Дочекатися можливості завантажити ЕЦП
     ...  AND  Завантажити ЕЦП
