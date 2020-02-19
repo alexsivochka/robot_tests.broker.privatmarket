@@ -1849,7 +1849,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  Відкрити детальну інформацію по позиціям
     #get information
     ${result}=  Run Keyword If
-    ...  'award_view' in @{TEST_TAGS} or 'add_contract' in @{TEST_TAGS}  Отримати інформацію про постачальника  ${tender_uaid}  ${field_name}
+    ...  'award_view' in @{TEST_TAGS} or 'add_contract' in @{TEST_TAGS} or 'постачальника переговорної процедури' in '${TEST_NAME}'  Отримати інформацію про постачальника  ${tender_uaid}  ${field_name}
     ...  ELSE IF  'contract_value' in @{TEST_TAGS} or 'contract_view' in @{TEST_TAGS} or 'contract_view_dateSigned' in @{TEST_TAGS} or 'doc_to_contract' in @{TEST_TAGS}  Отримати інформацію з контракту  ${tender_uaid}  ${field_name}
     ...  ELSE  Отримати інформацію зі сторінки  ${user_name}  ${tender_uaid}  ${field_name}
     [Return]  ${result}
