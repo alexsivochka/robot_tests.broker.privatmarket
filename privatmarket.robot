@@ -1025,7 +1025,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
     Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='postalCode']  ${items[${index}].deliveryAddress.postalCode}
     Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@value='string:${items[0].deliveryAddress.countryName}']
-    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@value='string:${items[0].deliveryAddress.region}']
+#    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@value='string:${items[0].deliveryAddress.region}']
+    Wait Visibility And Click Element  xpath=(//select[contains(@ng-model,'region')])[${item_index}]/option[@value='string:${items[0].deliveryAddress.region}']
 #    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='countryName']  ${items[${index}].deliveryAddress.countryName}
 #    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='region']  ${items[${index}].deliveryAddress.region}
     Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='locality']  ${items[${index}].deliveryAddress.locality}
