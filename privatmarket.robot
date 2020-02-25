@@ -1024,9 +1024,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  Wait Visibility And Click Element  xpath=((//div[@data-id='lot'])[${lot_index}]//span[contains(text(), 'точна адреса')])[${item_index}]//preceding-sibling::input
 
     Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='postalCode']  ${items[${index}].deliveryAddress.postalCode}
-    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@value='string:${items[0].deliveryAddress.countryName}']
+    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'countryName')]/option[@value='string:${items[${index}].deliveryAddress.countryName}']
 #    Wait Visibility And Click Element  xpath=//select[contains(@ng-model,'region')]/option[@value='string:${items[0].deliveryAddress.region}']
-    Wait Visibility And Click Element  xpath=(//select[contains(@ng-model,'region')])[${item_index}]/option[@value='string:${items[0].deliveryAddress.region}']
+    Wait Visibility And Click Element  xpath=(//select[contains(@ng-model,'region')])[${item_index}]/option[@value='string:${items[${index}].deliveryAddress.region}']
 #    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='countryName']  ${items[${index}].deliveryAddress.countryName}
 #    Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='region']  ${items[${index}].deliveryAddress.region}
     Wait Element Visibility And Input Text  xpath=((//div[@data-id='lot'])[${lot_index}]//div[@data-id='item'])[${item_index}]//input[@data-id='locality']  ${items[${index}].deliveryAddress.locality}
@@ -2948,8 +2948,8 @@ Scroll To Element
 
 Отримати посилання на аукціон для глядача
     [Arguments]  ${user}  ${tenderId}  ${object_id}=${Empty}
-    Wait For Element With Reload  xpath=//a[contains(@href, 'https://auction-sandbox.prozorro.gov.ua/')]  1  30
-    ${result}=  Get Element Attribute  xpath=//a[contains(@href, 'https://auction-sandbox.prozorro.gov.ua/')]@href
+    Wait For Element With Reload  xpath=//a[contains(@href, 'https://auction-staging.prozorro.gov.ua/')]  1  30
+    ${result}=  Get Element Attribute  xpath=//a[contains(@href, 'https://auction-staging.prozorro.gov.ua/')]@href
     [Return]  ${result}
 
 
@@ -4384,8 +4384,8 @@ Get Item Number
 
 Отримати посилання на аукціон для учасника
     [Arguments]  ${username}  ${tender_uaid}
-    Wait For Element With Reload  xpath=//a[contains(@href, 'https://auction-sandbox.prozorro.gov.ua/')]  1  30
-    ${result}=  Get Element Attribute  xpath=//a[contains(@href, 'https://auction-sandbox.prozorro.gov.ua/')]@href
+    Wait For Element With Reload  xpath=//a[contains(@href, 'https://auction-staging.prozorro.gov.ua/')]  1  30
+    ${result}=  Get Element Attribute  xpath=//a[contains(@href, 'https://auction-staging.prozorro.gov.ua/')]@href
     [Return]  ${result}
 
 
