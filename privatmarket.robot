@@ -896,6 +896,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     ...  ELSE  Wait For Element With Reload  css=[data-tender-status^='active.enquiries']  1
     ${tender_id}=  Get Text  ${tender_data_tenderID}
     Log To Console  ${tender_id}
+    Set Global Variable  ${TENDER_ID}  ${tender_id}
     [Return]  ${tender_id}
 
 
@@ -1315,6 +1316,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 Змінити лот
     [Arguments]  ${user_name}  ${tenderId}  ${lot_id}  ${field}  ${value}
+    ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  ${tender_data_title}  5s
+    Run Keyword If  '${status}' == 'False'  privatmarket.Пошук тендера по ідентифікатору  ${user_name}  ${TENDER_ID}
     Run Keyword And Return If  'value.amount' == '${field}'  Змінити ${field} лоту  ${value}
     Run Keyword And Return If  'minimalStep.amount' == '${field}'  Змінити ${field} лоту  ${value}
     Wait For Element With Reload  ${locator_tenderClaim.buttonCreate}  1
@@ -1374,6 +1377,8 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 
 Додати неціновий показник на тендер
     [Arguments]  ${user_name}  ${tenderId}  ${feature}
+    ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  ${tender_data_title}  5s
+    Run Keyword If  '${status}' == 'False'  privatmarket.Пошук тендера по ідентифікатору  ${user_name}  ${TENDER_ID}
     Wait For Element With Reload  ${locator_tenderClaim.buttonCreate}  1
     ${type}=  Отримати інформацію з procurementMethodType
     ${type}=  Set Variable  '${type}'
@@ -3546,6 +3551,7 @@ Try Search Element
     ...  ELSE IF  '${tab_number}' == '1' and 'статусу зареєстрованої угоди' in '${TEST_NAME}'  Відкрити детальну інформацію про рамкові угоди
     ...  ELSE IF  '${tab_number}' == '1' and 'change_view' in @{TEST_TAGS}  Відкрити детальну інформацію про рамкові угоди
     ...  ELSE IF  '${tab_number}' == '1' and 'modification_view' in @{TEST_TAGS}  Відкрити детальну інформацію про рамкові угоди
+    ...  ELSE IF  '${tab_number}' == '1' and 'запитання на тендер без відповіді' in '${TEST_NAME}'  Відкрити інформацію по запитанням на тендер
     ...  ELSE IF  '${tab_number}' == '1'  Відкрити детальну інформацію по позиціям
     ...  ELSE IF  '${tab_number}' == '2' and 'відповіді на запитання' in '${TEST_NAME}'  Відкрити повну відповідь на запитання
     ...  ELSE IF  '${tab_number}' == '3' and 'заголовку документації' in '${TEST_NAME}'  Відкрити інформацію про вкладені файли вимоги
@@ -3568,6 +3574,12 @@ Switch To Tab
     Execute JavaScript  window.scrollTo(${0},${0})
     Run Keyword Unless  'checked' in '${class}'  Wait Visibility And Click Element  xpath=(//div[@id='nav-tab']/a)[${tab_number}]
     Sleep  1s
+
+
+Відкрити інформацію по запитанням на тендер
+    Reload Page
+    sleep  5s
+    Wait Visibility And Click Element  xpath=(//div[@id='nav-tab']/a)[2]
 
 
 Search By Query
