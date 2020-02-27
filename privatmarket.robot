@@ -2037,7 +2037,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword If  '${field_name}' == 'value.amount'  Редагувати вартість угоди з урахуванням ПДВ  ${value}
     Wait Until Element Is Enabled  css=button[ng-click="act.saveContract('pending')"]  ${COMMONWAIT}
     Click Button  css=button[ng-click="act.saveContract('pending')"]
-    Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
+    Run Keyword And Ignore Error  Wait Visibility And Click Element  xpath=//button[@data-id='modal-close']
     sleep  5s
     ${amount}=  execute javascript  return document.getElementsByClassName('current-amount-input')[0].value;
     ${amountNet}=  execute javascript  return document.getElementsByClassName('current-amount-net-input')[0].value;
@@ -2178,11 +2178,31 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Run Keyword And Return If  '${field_name}' == 'budget.amount'  Convert Amount To Number  ${field_name}
     Run Keyword If  '${field_name}' == 'agreements[0].agreementID' and 'framework_agreement' in '${scenarios_name}'  Відкрити детальну інформацію про рамкові угоди
     Run Keyword And Return If  '${field_name}' == 'items[0].quantity' and 'framework_selection' in '${scenarios_name}'  Отримати число  ${tender_data_${field_name}}  0
+    Run Keyword And Return If  '${field_name}' == 'contracts[0].id' and 'framework_agreement' in '${scenarios_name}'  Отримати contractID  ${field_name}
+    Run Keyword And Return If  '${field_name}' == 'items[0].id' and 'framework_agreement' in '${scenarios_name}'  Отримати itemID  ${field_name}
 
     Wait Until Element Is Visible  ${tender_data_${field_name}}
     ${result_full}=  Get Text  ${tender_data_${field_name}}
     ${result}=  Strip String  ${result_full}
     [Return]  ${result}
+
+
+Отримати contractID
+    [Arguments]  ${field_name}
+    Reload Page
+    sleep  5s
+    Відкрити детальну інформацію про рамкові угоди
+    Wait Visibility And Click Element  css=div.agreements
+    Run Keyword And Return If  'contracts[0].id' in '${field_name}'  Get Element Attribute  xpath=//*[@data-id='agreement-contract-id']@data-agreement-contract-id
+
+
+Отримати itemID
+    [Arguments]  ${field_name}
+    Reload Page
+    sleep  5s
+    Відкрити детальну інформацію про рамкові угоди
+    Wait Visibility And Click Element  css=div.agreements
+    Run Keyword And Return If  'items[0].id' in '${field_name}'  Get Element Attribute  xpath=//*[@data-id='agreement-item-id']@data-agreement-item-id
 
 
 Отримати інформацію із договору
@@ -3551,6 +3571,7 @@ Try Search Element
     ...  ELSE IF  '${tab_number}' == '1' and 'статусу зареєстрованої угоди' in '${TEST_NAME}'  Відкрити детальну інформацію про рамкові угоди
     ...  ELSE IF  '${tab_number}' == '1' and 'change_view' in @{TEST_TAGS}  Відкрити детальну інформацію про рамкові угоди
     ...  ELSE IF  '${tab_number}' == '1' and 'modification_view' in @{TEST_TAGS}  Відкрити детальну інформацію про рамкові угоди
+    ...  ELSE IF  '${tab_number}' == '1' and 'agreement_view' in @{TEST_TAGS}  Відкрити детальну інформацію про рамкові угоди
     ...  ELSE IF  '${tab_number}' == '1' and 'запитання на тендер без відповіді' in '${TEST_NAME}'  Відкрити інформацію по запитанням на тендер
     ...  ELSE IF  '${tab_number}' == '1'  Відкрити детальну інформацію по позиціям
     ...  ELSE IF  '${tab_number}' == '2' and 'відповіді на запитання' in '${TEST_NAME}'  Відкрити повну відповідь на запитання
