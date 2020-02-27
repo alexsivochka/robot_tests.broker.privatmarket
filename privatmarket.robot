@@ -4722,6 +4722,10 @@ Get Item Number
 
     Run Keyword If  'itemPriceVariation' in '${TEST_NAME}' or 'thirdParty' in '${TEST_NAME}'  Clear Element Text  xpath=//input[@data-id='modification-factor-input']
 
+    Run Keyword And Return If  '${field_name}' == 'contractId' or '${field_name}' == 'itemId'
+    ...  Run Keywords
+    ...  Wait Visibility And Click Element  xpath=//button[@data-id='review-changes']
+    ...  AND  sleep  30s
     # Приводим factor к процентам для соответствия ТЗ
     ${factor_percent}=  Evaluate  (${field_value}-1)*100
     ${factor_percent}=  Convert To String  ${factor_percent}
