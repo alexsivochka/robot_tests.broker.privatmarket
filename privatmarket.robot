@@ -1982,7 +1982,7 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
     Wait For Element With Reload  xpath=//span[@id='contractStatus']  1
     Wait Visibility And Click Element  xpath=//div[contains(@class,'contracts info')]//div[@id='noEcp']
     Sleep  1s
-    Run Keyword Unless  'single_item' in '${scenarios_name}'  Run Keyword  Завантажити ЕЦП
+    Run Keyword Unless  'single_item' in '${scenarios_name}' or 'below_funders' in '${scenarios_name}'  Run Keyword  Завантажити ЕЦП
     Sleep  2min
 
 
