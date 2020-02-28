@@ -21,11 +21,16 @@ def modify_test_data(initial_data):
     initial_data['procuringEntity']['identifier']['legalName'] = u'ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СІЛЬСЬКОГОСПОДАРСЬКА ФІРМА \"РУБІЖНЕ\"'
     initial_data['procuringEntity']['identifier']['id'] = u'38580144'
     # #
-    initial_data['buyers'][0]['identifier']['id'] = u'38580144'
-    initial_data['buyers'][0]['identifier']['legalName'] = u'ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СІЛЬСЬКОГОСПОДАРСЬКА ФІРМА \"РУБІЖНЕ\"'
-    initial_data['buyers'][0]['name'] = u'ТОВ \"СФ \"РУБІЖНЕ\"'
-    initial_data['tender']['tenderPeriod']['startDate'] = add_day_to_date(initial_data['tender']['tenderPeriod']['startDate'])
-
+    if 'buyers' in initial_data:
+        initial_data['buyers'][0]['identifier']['id'] = u'38580144'
+        initial_data['buyers'][0]['identifier']['legalName'] = u'ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СІЛЬСЬКОГОСПОДАРСЬКА ФІРМА \"РУБІЖНЕ\"'
+        initial_data['buyers'][0]['name'] = u'ТОВ \"СФ \"РУБІЖНЕ\"'
+        initial_data['tender']['tenderPeriod']['startDate'] = add_day_to_date(initial_data['tender']['tenderPeriod']['startDate'])
+    if 'funders' in initial_data:
+        if initial_data['funders'][0]['address']['locality'] == u'Geneva':
+            initial_data['funders'][0]['address']['locality'] = u'Женева'
+        if initial_data['funders'][0]['address']['locality'] == u'Washington':
+            initial_data['funders'][0]['address']['locality'] = u'Вашингтон'
     # initial_data['procuringEntity']['name'] = u'Макстрой Діск, Товариство З Обмеженою Відповідальністю'
     # initial_data['procuringEntity']['name'] = u'ФОП ОГАНІН ОЛЕКСАНДР ПЕТРОВИЧ'
     return initial_data
