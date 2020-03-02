@@ -909,8 +909,9 @@ ${tender_data_agreements[0].agreementID}  xpath=//div[@parent-agreement-id] | //
 Перейти до створення другого етапу рамок
     [Arguments]  ${username}  ${tender_uaid}
     privatmarket.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+    sleep  30s
     Wait Visibility And Click Element  xpath=//button[@data-id='createCfasDraft']
-    Wait Until Element Is Visible  xpath=//div[text()='Відбір для закупівлі за рамковою угодою']
+    Wait Until Element Is Visible  xpath=//div[text()='Відбір для закупівлі за рамковою угодою']  ${COMMONWAIT}
 
 
 Додати lots
