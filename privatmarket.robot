@@ -4784,7 +4784,7 @@ Get Item Number
     Wait Visibility And Click Element  xpath=//a/span[text()='Зміни до рамкової угоди']
     Wait Visibility And Click Element  xpath=//div[@data-id='present-ecp']
     Завантажити ЕЦП
-    sleep  200s
+    sleep  240s
 
 
 
